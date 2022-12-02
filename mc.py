@@ -25,21 +25,20 @@ import ly.pitch as pitch
 
 
 # naïve musicode AST, using dictionaries
-ast = {'note': {'pitch': 3, 'octave': 4, 'length': 1}}
+ast = {'pitch': {'note': 0, 'octave': 0, 'duration': 0}}
 
-# def build_note(ast):
-#     note = items.Note()
-#     p = pitch.Pitch(note=ast['pitch'], octave=ast['octave'])
-#     note.pitch = p
-#     note.duration = ast['length']
-#     return note
+def build_pitch(ast, parent):
+    dom.Pitch(octave=ast['octave'], note=ast['note'], parent=parent)
+    dom.Duration(ast['duration'], parent=parent)
 
-def build_note(ast):
-    d = dom.Duration(ast['length'])
-    p = dom.Pitch(octave=ast['octave'], note=ast['pitch'], parent=d)
-    return p
 
-n = build_note(ast['note'])
-p = dom.Printer()
-s = n.ly(p)
-print(s)
+seq = dom.Seq()
+build_pitch(ast['pitch'], seq)
+root = seq
+
+print(root.ly(dom.Printer()))
+
+# how to use:
+# python3 mc.py > test.ly
+# lilypond --pdf test.ly
+# $PDF_VIEWER test.pdf
