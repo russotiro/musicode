@@ -1,0 +1,30 @@
+%import common.WORD
+start: statement+
+statement: title | composer | clef | time | key | instruments | part
+
+title: "(title" "\"" WORD+ "\"" ")"
+composer: "(composer" "\"" WORD+ "\"" ")"
+
+measure: /m[1-9][0-9]*/
+
+clef: "(clef" clef_value measure instrument ")"
+clef_value: /(treble|bass)/
+
+time: "(time" time_signature measure instrument ")"
+time_signature: /[1-9][0-9]*/ "/" duration
+
+key: "(key" pitch measure instrument ")"
+
+instruments: "(instruments" instrument+ ")"
+
+part: "(part" instrument instrument_name notes+ ")"
+instrument: WORD
+instrument_name: "\"" WORD+ "\""
+notes: "(notes" note+ ")"
+note: pitch octave "/" duration
+pitch: /[A-G][#b]?/
+octave: /[0-8]/
+duration: /[1248(16)(32)(64)(128)]\.{0,3}/
+
+%ignore " "
+%ignore "\n"
