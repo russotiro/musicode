@@ -1,0 +1,29 @@
+@startuml 
+
+package "MusiCode Editor" {
+    component [IDE]
+    component [Compiler Client]
+}
+interface "End User"
+node "Transpiler" {
+    component [MusiCode Lexer/Parser]
+    component [Tree Conversion]
+    component [LilyPond Printer]
+}
+component [LilyPond Tools]
+
+[End User] --> [IDE] : MusiCode
+[IDE] ..> [End User] : Syntax Highlight
+[IDE] -> [Compiler Client] : MusiCode
+[End User] --> [Compiler Client] : Compile Request
+[Compiler Client] --> [End User] : Generated Score
+
+[Compiler Client] --> [MusiCode Lexer/Parser] : MusiCode
+[MusiCode Lexer/Parser] ..> [Compiler Client] : Error Messages
+[MusiCode Lexer/Parser] --> [Tree Conversion] : MusiCode AST 
+[Tree Conversion] --> [LilyPond Printer] : LilyPond AST
+[LilyPond Printer] --> [LilyPond Tools] : LilyPond 
+
+[LilyPond Tools] --> [Compiler Client] : Score PDF
+
+@enduml
