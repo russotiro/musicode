@@ -1,5 +1,5 @@
-(title "My Title")
-(composer "Me")
+(title "Jingle Bells")
+(composer "James Pierpont")
 (instruments flute)
 
 (clef treble m1 flute)

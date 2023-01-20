@@ -119,3 +119,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# 'system' function in 'os' package runs something as if it's running from the command line
+# also 'popen' and 'call' functions
+# module called 'subprocess'
