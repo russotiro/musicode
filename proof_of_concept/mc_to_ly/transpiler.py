@@ -102,6 +102,31 @@ def print_score(ast):
     print(header.ly(dom.Printer()))
     print(score.ly(dom.Printer()))
 
+
+# class MyTransformer(Transformer):
+#     def duration(self, args):
+#         n = int(args[0].value)
+#         return ('<duration>', duration2int(n))
+    
+#     def title(self, args):
+#         t = ' '.join([word.value for word in args])
+#         return ('<title>', t)
+
+#     def pitch(self, args):
+#         # note: need to handle accidentals
+#         n = pitch2int(args[0].value[0])
+#         return ('<pitch>', n)
+
+#     def octave(self, args):
+#         n = int(args[0].value)
+#         return ('<octave>', octave2int(n))
+
+#     def note(self, args):
+#         return ('<note>', *args)
+        
+
+
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: python3 transpiler.py musicodeFile")
@@ -109,9 +134,11 @@ def main():
 
     grammar_file = open("grammar.lark", "r")
     parser = lark.Lark(grammar_file.read())
-
+    
     musicode_file = open(sys.argv[1], "r")
     tree = parser.parse(musicode_file.read())
+    # print(MyTransformer().transform(tree))
+    # return
 
     score_info = extract_score_info(tree)
 
