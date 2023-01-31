@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 '''
 This version of the transpiler can only handle treble-clef music in 4/4
 with one part. It currently only supports a score title, composer, and 
@@ -13,6 +15,10 @@ import ly.dom as dom
 import ly.pitch as pitch
 
 import math 
+
+import mc_ast
+
+
 
 # GLOBAL CONVERTER
 PITCH2INT = {
@@ -103,27 +109,62 @@ def print_score(ast):
     print(score.ly(dom.Printer()))
 
 
-# class MyTransformer(Transformer):
-#     def duration(self, args):
-#         n = int(args[0].value)
-#         return ('<duration>', duration2int(n))
+class MyTransformer(Transformer):
+    def duration(self, args):
+        n = int(args[0].value)
+        return ('duration', duration2int(n))
     
-#     def title(self, args):
-#         t = ' '.join([word.value for word in args])
-#         return ('<title>', t)
+    def title(self, args):
+        t = ' '.join([word.value for word in args])
+        return ('title', t)
 
-#     def pitch(self, args):
-#         # note: need to handle accidentals
-#         n = pitch2int(args[0].value[0])
-#         return ('<pitch>', n)
+    def composer(self, args):
+        name = ' '.join([word.value for word in args])
+        return ('composer', name)
+    
+    def statement(self, args):
+        return args
 
-#     def octave(self, args):
-#         n = int(args[0].value)
-#         return ('<octave>', octave2int(n))
+    def pitch(self, args):
+        # note: need to handle accidentals
+        n = pitch2int(args[0].value[0])
+        return ('pitch', n)
 
-#     def note(self, args):
-#         return ('<note>', *args)
+    def octave(self, args):
+        n = int(args[0].value)
+        return ('octave', octave2int(n))
+
+    def notes(self, args):
+        return ('notes', args)
+
+    def instruments(self, args):
+        return ('instruments', args)
+
+    def clef(self, args):
+        return ('clef', args)
+
+    def time(self, args):
+        return ('time', args)
+
+    def key(self, args):
+        return ('key', args)
+    
+    def part(self, args):
+        # args = dict(args)
+        # return ('part', mc_ast.Part(args['instrument'], args['instrument_name'],
+        #                             args['notes']))
+        return ('part', args)
+
+    # def start(self, args):
+    #     # TODO: fold all 'part' pairs into one list
+    #     args = dict(args)
+    #     return mc_ast.Score({}, args['part'])
         
+    
+    def note(self, args):
+        args = dict(args)
+        return mc_ast.Note(args['pitch'], args['octave'],
+                           args['duration'])        
 
 
 
@@ -137,12 +178,12 @@ def main():
     
     musicode_file = open(sys.argv[1], "r")
     tree = parser.parse(musicode_file.read())
-    # print(MyTransformer().transform(tree))
-    # return
+    print(MyTransformer().transform(tree))
+    return
 
-    score_info = extract_score_info(tree)
+    # score_info = extract_score_info(tree)
 
-    print_score(score_info)
+    # print_score(score_info)
 
 if __name__ == '__main__':
     main()
