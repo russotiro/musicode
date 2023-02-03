@@ -109,6 +109,21 @@ def print_score(ast):
     print(score.ly(dom.Printer()))
 
 
+
+def flatten(xs):
+    result = []
+
+    for x in xs:
+        if type(x) == list:
+            f = flatten(x)
+            result += x
+        else:
+            result.append(x)
+
+    return result
+
+
+
 class MyTransformer(Transformer):
     def duration(self, args):
         n = int(args[0].value)
@@ -140,6 +155,12 @@ class MyTransformer(Transformer):
     def instruments(self, args):
         return ('instruments', args)
 
+    def instrument(self, args):
+        return ('instrument', args)
+
+    def instrument_name(self, args):
+        return ('instrument_name', args)
+
     def clef(self, args):
         return ('clef', args)
 
@@ -150,15 +171,15 @@ class MyTransformer(Transformer):
         return ('key', args)
     
     def part(self, args):
-        # args = dict(args)
-        # return ('part', mc_ast.Part(args['instrument'], args['instrument_name'],
-        #                             args['notes']))
-        return ('part', args)
+        args = dict(args)
+        return ('part', mc_ast.Part(args['instrument'], args['instrument_name'],
+                                    args['notes']))
 
-    # def start(self, args):
-    #     # TODO: fold all 'part' pairs into one list
-    #     args = dict(args)
-    #     return mc_ast.Score({}, args['part'])
+    def start(self, args):
+        flat_args = flatten(args)
+        print(flat_args)
+        dict_args = dict(flat_args)
+        return mc_ast.Score(dict_args, dict_args['part'])
         
     
     def note(self, args):
@@ -178,8 +199,11 @@ def main():
     
     musicode_file = open(sys.argv[1], "r")
     tree = parser.parse(musicode_file.read())
-    print(MyTransformer().transform(tree))
-    return
+    hdr, score = MyTransformer().transform(tree).render()
+
+    p = dom.Printer()
+    print(hdr.ly(p))
+    print(score.ly(p))
 
     # score_info = extract_score_info(tree)
 
