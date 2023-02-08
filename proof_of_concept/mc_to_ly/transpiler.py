@@ -114,13 +114,14 @@ class MyTransformer(Transformer):
 
     def start(self, args):
         flat_args = flatten(args)
-        # print(flat_args)
+        print(flat_args)
         dict_args = dict(flat_args)
         return mc_ast.Score(dict_args, dict_args['part'])
         
     
     def note(self, args):
         args = dict(args)
+        print(args)
         return mc_ast.Note(args['pitch'], args['octave'],
                            args['duration'])        
 
