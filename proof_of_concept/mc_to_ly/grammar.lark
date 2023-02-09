@@ -1,30 +1,73 @@
 %import common.WORD
 start: statement+
-statement: title | composer | clef | time | key | instruments | part
+LPAREN: "("
+RPAREN: ")"
+LBRACKET: "["
+RBRACKET: "]"
+statement: LPAREN (title | subtitle | composer | tempo | instruments | part) RPAREN
 
-title: "(title" "\"" WORD+ "\"" ")"
-composer: "(composer" "\"" WORD+ "\"" ")"
+title: "title" "\"" WORD+ "\""
+subtitle: "subtitle" "\"" WORD+ "\""
+composer: "composer" "\"" WORD+ "\""
 
 measure: /m[1-9][0-9]*/
 
-clef: "(clef" clef_value measure instrument ")"
-clef_value: /(treble|bass)/
+tempo: "tempo" ((/\"/ WORD+ /\"/) | ("/" duration "=" /[1-9][0-9]*/) | (/\"/ WORD+ /\"/ "/" duration "=" /[1-9][0-9]*/)) measure? // TODO: simplify. and accept other order
 
-time: "(time" time_signature measure instrument ")"
-time_signature: /[1-9][0-9]*/ "/" duration
+instruments: "instruments" instrument+
 
-key: "(key" pitch measure instrument ")"
-
-instruments: "(instruments" instrument+ ")"
-
-part: "(part" instrument instrument_name notes+ ")"
+// part construction
+part: "part" instrument instrument_name staff+
 instrument: WORD
 instrument_name: "\"" WORD+ "\""
-notes: "(notes" note+ ")"
-note: pitch octave "/" duration
-pitch: /[A-G][#b]?/
+staff: LPAREN "staff" staff_environment+ RPAREN
+
+// staff environments
+staff_environment: LPAREN (notes | voices | ending | coda | staff_event) RPAREN
+notes: "notes" notes_argument+
+notes_argument: note_environment | (LPAREN staff_event RPAREN) | note_event
+voices: "voices" voice+
+voice: LPAREN "voice" (LPAREN notes RPAREN)+ RPAREN
+ending: "ending" /[1-9](,[1-9])*/ staff_environment+ // no more than 9 endings!!
+coda: "coda" staff_environment+
+
+// note environments
+note_environment: LPAREN (tuplet | grace | tremolo) RPAREN
+tuplet: "tuplet" /[1-9][0-9]*\/[1-9][0-9]*/ notes_argument+
+grace: "grace" grace_type? LPAREN notes RPAREN (note_event | note_environment)
+grace_type: /slash|noSlash/
+tremolo: "tremolo" notes_argument notes_argument // transpiler note: force notes to have same duration
+
+// staff events
+staff_event: clef | key | time | barline | symbol | text
+clef: "clef" WORD // define clef database: treble, bass, alto, tenor, neutral...
+key: "key" /[A-G][#b]?[Mm]?/
+time: "time" ((/[1-9][0-9]*/ "/" duration) | /common/ | /cut/)
+barline: "barline" WORD // define barline database: single, double, repeatBegin, repeatEnd, final...
+// transpiler note: if we detect a final barline in the middle of the piece, we must put "Fine" in bold above it
+symbol: "symbol" WORD // define symbol database: CURRENTLY ONLY "segno"
+text: road_map | expression_text | technique_text
+road_map: /(D\.C\.|D\.S\.) al ([fF]ine|[cC]oda)/ | /toCoda/
+expression_text: "expression" "\"" WORD+ "\""
+technique_text: "technique" "\"" WORD+ "\""
+
+// note events
+note_event: (rest | ((note | chord) modifier_list?)) "/" duration
+rest: ("r" | "R")
+note: pitch octave
+chord: note ("_" note)*
+pitch: /[A-Ga-g][#b]?/
 octave: /[0-8]/
-duration: /[1248(16)(32)(64)(128)]\.{0,3}/
+duration: /(1(6|28)?|2|4|8|32|64)\.{0,3}/
+
+// modifiers
+modifier_list: (LBRACKET modifier_keyword+ RBRACKET) | articulation_symbol+
+modifier_keyword: articulation_keyword | /stemUp|stemDown/ | piano_keyword | dynamics_keyword | beaming
+articulation_keyword: /staccato|marcato|tenuto|accent|fermata|tie|gliss(ando)?|(phrasingSlur|slur)(Begin|End)|tremolo(8|16|32)|trill/
+articulation_symbol: /\./ | /\^/ | /_/ | />/ | /~/
+piano_keyword: /pedalBegin/ | /pedalEnd/ | /lift/ | /pianoFinger[1-5]/
+dynamics_keyword: /p{1,3}/ | /mp/ | /mf/ | /f{1,3}/ | /s[pf]/ | /sf{1,2}z/ | /fp/ | /cresc(endo)?(Text)?(Begin|End)/ | /(decresc(endo)?|dim(inuendo)?)(Text)?(Begin|End)/
+beaming: /noBeam|startBeam|endBeam|middleOfBeam|startSecondaryBeam/ //startSecondaryBeam? yes or no?
 
 %ignore " "
 %ignore "\n"

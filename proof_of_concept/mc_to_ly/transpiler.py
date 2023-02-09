@@ -65,6 +65,12 @@ def flatten(xs):
 
 
 class MyTransformer(Transformer):
+    def tempo(self, args):
+        # TODO: handle other 3 forms of tempo
+        duration = args[0][1]
+        bpm = int(args[1][1])
+        return mc_ast.Tempo(duration=duration, bpm=bpm)
+
     def duration(self, args):
         n = int(args[0].value)
         return ('duration', duration2int(n))
@@ -78,7 +84,31 @@ class MyTransformer(Transformer):
         return ('composer', name)
     
     def statement(self, args):
-        return args
+        # a statement is just a single rule surrounded by parentheses,
+        # so return that and forget about the parentheses
+        return args[1]
+
+    def staff(self, args):
+        return args[1:-1]
+
+    def staff_environment(self, args):
+        return args[1]
+
+    def staff_event(self, args):
+        return args[1]
+
+    def note_environment(self, args):
+        return args[1]
+
+    def note_event(self, args):
+        # assign duration and modifiers and rummage through args to
+        # guess what goes where
+        if len(args) == 2:      # [note, duration]
+            args[0].duration = args[1][1]
+        elif len(args) == 3:    # [note, modifiers, duration]
+            args[0].duration = args[2][1]
+            args[0].mods = [] # TODO
+        return ('note_event', args)
 
     def pitch(self, args):
         # note: need to handle accidentals
@@ -89,17 +119,19 @@ class MyTransformer(Transformer):
         n = int(args[0].value)
         return ('octave', octave2int(n))
 
-    def notes(self, args):
-        return ('notes', args)
+    # def notes(self, args):
+    #     return ('notes', args)
 
     def instruments(self, args):
         return ('instruments', args)
 
     def instrument(self, args):
-        return ('instrument', args)
+        name = ' '.join([word.value for word in args])
+        return ('instrument', name)
 
     def instrument_name(self, args):
-        return ('instrument_name', args)
+        name = ' '.join([word.value for word in args])
+        return ('instrument_name', name)
 
     def clef(self, args):
         return ('clef', args)
@@ -110,22 +142,25 @@ class MyTransformer(Transformer):
     def key(self, args):
         return ('key', args)
     
-    def part(self, args):
-        args = dict(args)
-        return ('part', mc_ast.Part(args['instrument'], args['instrument_name'],
-                                    args['notes']))
+    # def part(self, args):
+    #     args = dict(args)
+    #     return ('part', mc_ast.Part(args['instrument'], args['instrument_name'],
+    #                                 args['notes']))
 
     def start(self, args):
-        flat_args = flatten(args)
+        # flat_args = flatten(args)
         # print(flat_args)
-        dict_args = dict(flat_args)
-        return mc_ast.Score(dict_args, dict_args['part'])
+        # dict_args = dict(flat_args)
+        # return mc_ast.Score(dict_args, dict_args['part'])
+        print(args)
+        return mc_ast.Score({'title': 'Dragostea Din Tei',
+                             'composer': 'O-Zone'},
+                            mc_ast.Part('vocals', 'me', []))
         
     
     def note(self, args):
         args = dict(args)
-        return mc_ast.Note(args['pitch'], args['octave'],
-                           args['duration'])        
+        return mc_ast.Note(args['pitch'], args['octave'], None)
 
 
 
