@@ -16,6 +16,6 @@
         (barline final)
         (technique "straight mute")
         (notes C4/4 D4/4 E4/4 F4/4)
-        (notes C4/8 D4[endBeam]/8 E4/8 F4/8 G4/8 A4[endBeam]/8 B4/8 C5/8)
+        (notes C4/8 D4[beamEnd]/8 E4/8 F4/8 G4/8 A4[beamEnd]/8 B4/8 C5/8)
         (D.S. al fine)
 ))

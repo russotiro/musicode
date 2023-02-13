@@ -3,7 +3,7 @@
 (composer "Me")
 (instruments flute clarinet)
 
-(tempo "Allegro non troppo" /4 = 120)
+(tempo "Allegro non troppo" /4 = 120 m50)
 
 (part flute "Flute"
     (staff
