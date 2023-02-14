@@ -10,11 +10,10 @@ class Note:
         self.octave = octave
 
     def render(self):
-        
-        return 
+        return self.pitch + self.octave
 
     def __repr__(self):
-        return ("(note %d %d %d)" % (self.pitch, self.octave, self.duration))
+        return ("(note %d %d)" % (self.pitch, self.octave))
 
 
 class Part:

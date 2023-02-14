@@ -10,9 +10,6 @@ import lark
 import sys 
 
 from lark import Lark, Transformer
-# import ly.music.items as items
-import ly.dom as dom
-import ly.pitch as pitch
 
 import math 
 
@@ -20,23 +17,9 @@ import mc_ast
 
 
 
-# GLOBAL CONVERTER
-PITCH2INT = {
-    'C': 0,
-    'D': 1,
-    'E': 2,
-    'F': 3,
-    'G': 4,
-    'A': 5,
-    'B': 6
-}
-
 
 # Converter functions converting between values in naive AST and the integer 
 # representation that would be passed into the ly library function. 
-def pitch2int(p):
-    return PITCH2INT[p]
-
 def octave2int(o):
     return o - 4
 
@@ -82,8 +65,7 @@ class MyTransformer(Transformer):
 
     def pitch(self, args):
         # note: need to handle accidentals
-        n = pitch2int(args[0].value[0])
-        return ('pitch', n)
+        return ('pitch', args[0].value[0])
 
     def octave(self, args):
         n = int(args[0].value)
@@ -111,6 +93,7 @@ class MyTransformer(Transformer):
         return ('key', args)
     
     def part(self, args):
+        print(args)
         args = dict(args)
         return ('part', mc_ast.Part(args['instrument'], args['instrument_name'],
                                     args['notes']))
@@ -128,8 +111,6 @@ class MyTransformer(Transformer):
 
 
 
-        
-
 
 
 def main():
@@ -142,6 +123,7 @@ def main():
     
     musicode_file = open(sys.argv[1], "r")
     tree = parser.parse(musicode_file.read())
+    print(tree)
     header, score = MyTransformer().transform(tree).render()
 
     p = dom.Printer()
