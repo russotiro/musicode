@@ -1,6 +1,7 @@
 (title "My Title")
+(subtitle "My Subtitle")
 (composer "Me")
-(instruments flute)
+(instruments flute clarinet)
 
 (part flute "Flute"
     (staff
