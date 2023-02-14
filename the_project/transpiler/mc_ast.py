@@ -2,22 +2,16 @@
 An intermediate representation of MusiCode code.
 '''
 
-import ly.dom as dom
-import ly.pitch as pitch
-
-
 
 
 class Note:
-    def __init__(self, pitch, octave, duration):
+    def __init__(self, pitch, octave):
         self.pitch = pitch
         self.octave = octave
-        self.duration = duration
 
-    def render(self, p):
-        pitch = dom.Pitch(parent=p, octave=self.octave, note=self.pitch)
-        duration = dom.Duration(self.duration, parent=p)
-        return pitch, duration
+    def render(self):
+        
+        return 
 
     def __repr__(self):
         return ("(note %d %d %d)" % (self.pitch, self.octave, self.duration))

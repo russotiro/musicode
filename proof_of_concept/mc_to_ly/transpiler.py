@@ -10,11 +10,8 @@ import lark
 import sys 
 
 from lark import Lark, Transformer
-# import ly.music.items as items
-import ly.dom as dom
-import ly.pitch as pitch
 
-import math 
+import math
 
 import mc_ast
 
@@ -143,10 +140,10 @@ def main():
     
     musicode_file = open(sys.argv[1], "r")
     tree = parser.parse(musicode_file.read())
-    hdr, score = MyTransformer().transform(tree).render()
+    header, score = MyTransformer().transform(tree).render()
 
     p = dom.Printer()
-    print(hdr.ly(p))
+    print(header.ly(p))
     print(score.ly(p))
 
     

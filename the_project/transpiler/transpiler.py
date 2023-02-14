@@ -124,8 +124,7 @@ class MyTransformer(Transformer):
     
     def note(self, args):
         args = dict(args)
-        return mc_ast.Note(args['pitch'], args['octave'],
-                           args['duration'])        
+        return mc_ast.Note(args['pitch'], args['octave'])
 
 
 
@@ -143,10 +142,10 @@ def main():
     
     musicode_file = open(sys.argv[1], "r")
     tree = parser.parse(musicode_file.read())
-    hdr, score = MyTransformer().transform(tree).render()
+    header, score = MyTransformer().transform(tree).render()
 
     p = dom.Printer()
-    print(hdr.ly(p))
+    print(header.ly(p))
     print(score.ly(p))
 
     
