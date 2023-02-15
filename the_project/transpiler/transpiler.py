@@ -49,13 +49,24 @@ def flatten(xs):
 class MyTransformer(Transformer):
     def __init__(self):
         self.metadata = dict()
+        self.note_events = list() # Temporary list of note_events. TODO: Delete
+        self.articulation_converter = {
+            '.': 'staccato',
+            '^': 'marcato',
+            '_': 'tenuto',
+            '>': 'accent',
+            '~': 'tie'
+        }
 
     def __concatenate_words(self, words):
         return ' '.join([word.value for word in words])
+    
+    def __symbol_to_word(self, symbol):
+        return self.articulation_converter[symbol]
 
     def start(self, args):
         print(args)
-        return mc_ast.Start(self.metadata)
+        return mc_ast.Start(self.metadata, self.note_events)
 
     def statement(self, args):
         return args
@@ -81,6 +92,76 @@ class MyTransformer(Transformer):
 
     def instrument(self, args):
         return args[0].value
+    
+    def note_event(self, args):
+        event = args[0]
+        if isinstance(event, mc_ast.Note): # Augment Note with modifiers & duration if note
+            modifiers = None
+            duration = args[-1]
+            if isinstance(args[1], mc_ast.Modifiers):
+                modifiers = args[1]
+            else:
+                modifiers = mc_ast.Modifiers([])
+            event.set_modifiers(modifiers)
+            event.set_duration(duration)
+        elif isinstance(event, mc_ast.Rest): # Augment Rest with duration if rest 
+            duration = args[-1]
+            event.set_duration(duration)
+        else:
+            pass # TODO: Implement chords
+
+        self.note_events.append(event)
+        return event
+    
+    def note(self, args):
+        # Initialize note instance with pitch and rhythm
+        return mc_ast.Note(args[0], args[1])
+    
+    def pitch(self, args):
+        return args[0].value
+    
+    def octave(self, args):
+        return args[0].value
+    
+    def rest(self, args):
+        rest = mc_ast.Rest()
+        if args: # Check if beaming list is nonempty
+            relevant_args = args[1:-1] # Remove LBRACKET and RBRACKET
+            rest.set_beaming([arg.value for arg in relevant_args])
+        else:
+            rest.set_beaming([])
+        
+        return rest
+    
+    def duration(self, args):
+        return args[0].value
+    
+    def modifier_keyword(self, args):
+        return args
+    
+    def articulation_keyword(self, args):
+        return args[0]
+    
+    def piano_keyword(self, args):
+        return args[0]
+    
+    def dynamics_keyword(self, args):
+        return args[0]
+    
+    def beaming(self, args):
+        return args[0]
+    
+    def modifier_list(self, args):
+        # Check if a list of modifier_keywords or articulation_symbols
+        if args[0] == '[': 
+            relevant_args = args[1:-1] # Remove LBRACKET & RBRACKET
+            return mc_ast.Modifiers([arg[0].value for arg in relevant_args])
+        else:
+            # Convert articulation symbols to word modifiers
+            return mc_ast.Modifiers([self.__symbol_to_word(arg) for arg in args])
+    
+    def articulation_symbol(self, args):
+        return args[0].value
 
 
 
@@ -99,6 +180,7 @@ def main():
     result = MyTransformer().transform(tree)
 
     print(result.metadata)
+    print([vars(event) for event in result.note_events])
 
 
 if __name__ == '__main__':
