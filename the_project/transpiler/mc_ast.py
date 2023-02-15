@@ -8,6 +8,12 @@ class Start:
         self.metadata = metadata
         self.note_events = note_events
 
+class Tempo:
+    def __init__(self, tempo_text=None, tempo_number=None, measure='1'):
+        self.tempo_text = tempo_text
+        self.tempo_number = tempo_number
+        self.measure = measure
+
 class Note:
     def __init__(self, pitch, octave):
         self.pitch = pitch 

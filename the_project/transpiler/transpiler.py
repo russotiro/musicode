@@ -64,6 +64,33 @@ class MyTransformer(Transformer):
     def __symbol_to_word(self, symbol):
         return self.articulation_converter[symbol]
 
+    def __determine_tempo_info(self, args):
+        tempo_text = None
+        tempo_number = None
+        measure = '1'
+
+        if len(args) == 1:
+            if type(args[0]) == str:
+                tempo_text = args[0]
+            else:
+                tempo_number = args[0]
+        elif len(args) == 2:
+            if type(args[0]) == str:
+                tempo_text = args[0]
+                if type(args[1]) == str:
+                    measure = args[1]
+                else:
+                    tempo_number = args[1]
+            else:
+                tempo_number = args[0]
+                measure = args[1]
+        else:
+            tempo_text = args[0]
+            tempo_number = args[1]
+            measure = args[2]
+
+        return tempo_text, tempo_number, measure
+
     def start(self, args):
         print(args)
         return mc_ast.Start(self.metadata, self.note_events)
@@ -92,6 +119,26 @@ class MyTransformer(Transformer):
 
     def instrument(self, args):
         return args[0].value
+
+    def tempo(self, args):
+        tempo_text, tempo_number, measure = self.__determine_tempo_info(args)
+        tempo = mc_ast.Tempo(tempo_text, tempo_number, measure)
+
+        print(tempo.tempo_text)
+        print(tempo.tempo_number)
+        print(tempo.measure)
+        return ('tempo', tempo)
+
+    def tempo_text(self, args):
+        return self.__concatenate_words(args[1:-1])
+
+    def tempo_number(self, args):
+        # format = list of two numbers. first is note value, second is bpm
+        args[1] = args[1].value
+        return args
+    
+    def measure(self, args):
+        return args[0].value[1:]
     
     def note_event(self, args):
         event = args[0]
@@ -114,7 +161,7 @@ class MyTransformer(Transformer):
         return event
     
     def note(self, args):
-        # Initialize note instance with pitch and rhythm
+        # Initialize note instance with pitch and octave
         return mc_ast.Note(args[0], args[1])
     
     def pitch(self, args):
@@ -179,8 +226,9 @@ def main():
     tree = parser.parse(musicode_file.read())
     result = MyTransformer().transform(tree)
 
+    print("\n\nOriginal tree:\n\n")
+    print(tree)
     print(result.metadata)
-    print([vars(event) for event in result.note_events])
 
 
 if __name__ == '__main__':

@@ -12,7 +12,9 @@ composer: "composer" "\"" WORD+ "\""
 
 measure: /m[1-9][0-9]*/
 
-tempo: "tempo" ((/\"/ WORD+ /\"/) | ("/" duration "=" /[1-9][0-9]*/) | (/\"/ WORD+ /\"/ "/" duration "=" /[1-9][0-9]*/)) measure? // TODO: simplify. and accept other order
+tempo: "tempo" (tempo_text | (tempo_text? tempo_number)) measure?
+tempo_text: /\"/ WORD+ /\"/
+tempo_number: "/" duration "=" /[1-9][0-9]*/
 
 instruments: "instruments" instrument+
 
