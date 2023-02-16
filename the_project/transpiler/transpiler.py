@@ -155,11 +155,17 @@ class MyTransformer(Transformer):
             duration = args[-1]
             event.set_duration(duration)
         else:
-            pass # TODO: Implement chords
+            mods = args[1] if len(args) == 3 else mc_ast.Modifiers([])
+            duration = args[-1]
+            event.set_duration(duration)
+            event.set_modifiers(mods)
 
         self.note_events.append(event)
         return event
-    
+
+    def chord(self, args):
+        return mc_ast.Chord(args)
+
     def note(self, args):
         # Initialize note instance with pitch and octave
         return mc_ast.Note(args[0], args[1])
@@ -229,6 +235,7 @@ def main():
     print("\n\nOriginal tree:\n\n")
     print(tree)
     print(result.metadata)
+    print(result.note_events)
 
 
 if __name__ == '__main__':
