@@ -124,9 +124,6 @@ class MyTransformer(Transformer):
         tempo_text, tempo_number, measure = self.__determine_tempo_info(args)
         tempo = mc_ast.Tempo(tempo_text, tempo_number, measure)
 
-        print(tempo.tempo_text)
-        print(tempo.tempo_number)
-        print(tempo.measure)
         return ('tempo', tempo)
 
     def tempo_text(self, args):
@@ -179,10 +176,9 @@ class MyTransformer(Transformer):
     def rest(self, args):
         rest = mc_ast.Rest()
         if args: # Check if beaming list is nonempty
-            relevant_args = args[1:-1] # Remove LBRACKET and RBRACKET
-            rest.set_beaming([arg.value for arg in relevant_args])
+            rest.set_beaming([arg.value for arg in args])
         else:
-            rest.set_beaming([])
+            rest.set_beaming(None)
         
         return rest
     
@@ -205,13 +201,18 @@ class MyTransformer(Transformer):
         return args[0]
     
     def modifier_list(self, args):
-        # Check if a list of modifier_keywords or articulation_symbols
-        if args[0] == '[': 
-            relevant_args = args[1:-1] # Remove LBRACKET & RBRACKET
-            return mc_ast.Modifiers([arg[0].value for arg in relevant_args])
-        else:
-            # Convert articulation symbols to word modifiers
-            return mc_ast.Modifiers([self.__symbol_to_word(arg) for arg in args])
+        modifiers = list()
+        for arg in args:
+            if type(arg) == list:
+                modifiers.append(arg[0].value)
+            elif type(arg) == str:
+                modifiers.append(self.__symbol_to_word(arg))
+            else:
+                print('Something\'s gone horribly wrong in modifier_list')
+        
+        print("Modifiers: ")
+        print(modifiers)
+        return mc_ast.Modifiers(modifiers)
     
     def articulation_symbol(self, args):
         return args[0].value

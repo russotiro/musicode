@@ -1,10 +1,10 @@
 %import common.WORD
 start: statement+
-LPAREN: "("
-RPAREN: ")"
-LBRACKET: "["
-RBRACKET: "]"
-statement: LPAREN (title | subtitle | composer | tempo | instruments | part) RPAREN
+_LPAREN: "("
+_RPAREN: ")"
+_LBRACKET: "["
+_RBRACKET: "]"
+statement: _LPAREN (title | subtitle | composer | tempo | instruments | part) _RPAREN
 
 title: "title" "\"" WORD+ "\""
 subtitle: "subtitle" "\"" WORD+ "\""
@@ -22,21 +22,21 @@ instruments: "instruments" instrument+
 part: "part" instrument instrument_name staff+
 instrument: WORD
 instrument_name: "\"" WORD+ "\""
-staff: LPAREN "staff" staff_environment+ RPAREN
+staff: _LPAREN "staff" staff_environment+ _RPAREN
 
 // staff environments
-staff_environment: LPAREN (notes | voices | ending | coda | staff_event) RPAREN
+staff_environment: _LPAREN (notes | voices | ending | coda | staff_event) _RPAREN
 notes: "notes" notes_argument+
-notes_argument: note_environment | (LPAREN staff_event RPAREN) | note_event
+notes_argument: note_environment | (_LPAREN staff_event _RPAREN) | note_event
 voices: "voices" voice+
-voice: LPAREN "voice" (LPAREN notes RPAREN)+ RPAREN
+voice: _LPAREN "voice" (_LPAREN notes _RPAREN)+ _RPAREN
 ending: "ending" /[1-9](,[1-9])*/ staff_environment+ // no more than 9 endings!!
 coda: "coda" staff_environment+
 
 // note environments
-note_environment: LPAREN (tuplet | grace | tremolo) RPAREN
+note_environment: _LPAREN (tuplet | grace | tremolo) _RPAREN
 tuplet: "tuplet" /[1-9][0-9]*\/[1-9][0-9]*/ notes_argument+
-grace: "grace" grace_type? LPAREN notes RPAREN (note_event | note_environment)
+grace: "grace" grace_type? _LPAREN notes _RPAREN (note_event | note_environment)
 grace_type: /slash|noSlash/
 tremolo: "tremolo" notes_argument notes_argument // transpiler note: enforce that notes have same duration
 
@@ -55,7 +55,7 @@ technique_text: "technique" "\"" WORD+ "\""
 
 // note events
 note_event: (rest | ((note | chord) modifier_list?)) "/" duration
-rest: ("r" | "R") (LBRACKET beaming RBRACKET)?
+rest: ("r" | "R") (_LBRACKET beaming _RBRACKET)?
 note: pitch octave
 chord: note ("_" note)*
 pitch: /[A-Ga-g][#b]?/
@@ -63,7 +63,7 @@ octave: /[0-8]/
 duration: /(1(6|28)?|2|4|8|32|64)\.{0,3}/
 
 // modifiers
-modifier_list: (LBRACKET modifier_keyword+ RBRACKET) | articulation_symbol+
+modifier_list: ((_LBRACKET modifier_keyword+ _RBRACKET) | articulation_symbol)+
 modifier_keyword: articulation_keyword | /stemUp|stemDown/ | piano_keyword | dynamics_keyword | beaming
 articulation_keyword: /staccato|marcato|tenuto|accent|fermata|tie|gliss(ando)?|(phrasingSlur|slur)(Begin|End)|tremolo(8|16|32)|trill/
 articulation_symbol: /\./ | /\^/ | /_/ | />/ | /~/
