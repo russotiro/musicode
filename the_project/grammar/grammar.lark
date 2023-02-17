@@ -48,8 +48,8 @@ time: "time" ((/[1-9][0-9]*/ "/" duration) | /common/ | /cut/)
 barline: "barline" WORD // define barline database: single, double, repeatBegin, repeatEnd, final...
 // transpiler note: if we detect a final barline in the middle of the piece, we must put "Fine" in bold above it
 symbol: "symbol" WORD // define symbol database: CURRENTLY ONLY "segno"
-text: road_map | expression_text | technique_text
-road_map: /(D\.C\.|D\.S\.) al ([fF]ine|[cC]oda)/ | /toCoda/
+text: road_map_text | expression_text | technique_text
+road_map_text: /(D\.C\.|D\.S\.) al ([fF]ine|[cC]oda)/ | /toCoda/
 expression_text: "expression" "\"" WORD+ "\""
 technique_text: "technique" "\"" WORD+ "\""
 

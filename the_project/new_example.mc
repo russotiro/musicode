@@ -11,7 +11,7 @@
         (notes C4/4 D4/4 E4/4 F4/4)
         (ending 1 (notes G4[trill]/4 A4[tremolo8]/4 B4/4 C5/4))
         (barline repeatEnd)
-        (ending 2 (notes F4/4 E4/4 D4/4 C4/4))
+        (ending 2 (notes (grace (notes E4/8) F4/4) E4/4 D4/4 C4/4))
         (notes C4/4 D4/4 E4/4 F4/4)
         (barline final)
         (technique "straight mute")

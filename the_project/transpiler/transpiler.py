@@ -186,7 +186,7 @@ class MyTransformer(Transformer):
         if args: # Check if beaming list is nonempty
             rest.set_beaming([arg.value for arg in args])
         else:
-            rest.set_beaming(None)
+            rest.set_beaming([])
         
         return rest
     
@@ -218,15 +218,82 @@ class MyTransformer(Transformer):
             else:
                 sys.stderr.write('Something\'s gone horribly wrong in modifier_list\n')
         
-        print("Modifiers: ")
-        print(modifiers)
         return mc_ast.Modifiers(modifiers)
     
     def articulation_symbol(self, args):
         return args[0].value
 
+    # staff events
 
+    def clef(self, args):
+        return ('clef', args[0].value)
 
+    def key(self, args):
+        return ('key', args[0].value)
+
+    def time(self, args):
+        if len(args) == 1:
+            return ('time', args[0].value)
+        elif len(args) == 2:
+            return ('time', [args[0].value, args[1]])
+        else:
+            sys.stderr.write("something went wrong in time\n")
+
+    def barline(self, args):
+        barline_database = ['single', 'double', 'repeatBegin', 'repeatEnd', 'final', 'dotted']
+
+        if args[0].value in barline_database:
+            return ('barline', args[0].value)
+        else:
+            sys.stderr.write("You tried to set an invalid barline type: " + args[0].value + "\n")
+
+    def symbol(self, args):
+        symbol_database = ['segno']
+
+        if args[0].value in symbol_database:
+            return ('symbol', args[0].value)
+        else:
+            sys.stderr.write("You tried to set an invalid symbol type: " + args[0].value + "\n")
+
+    def road_map_text(self, args):
+        return ('road_map_text', args[0].value.lower())
+
+    def expression_text(self, args):
+        return ('expression_text', self.__concatenate_words(args))
+
+    def technique_text(self, args):
+        return ('technique_text', self.__concatenate_words(args))
+
+    def text(self, args):
+        return args[0]
+
+    def staff_event(self, args):
+        return args[0]
+
+    # note environments
+
+    def notes_argument(self, args):
+        return args[0]
+
+    def tuplet(self, args):
+        return mc_ast.Tuplet(args[0].value, args[1:])
+
+    def grace_type(self, args):
+        return args[0].value
+
+    def notes(self, args):
+        return ('notes', args)
+
+    def grace(self, args):
+        grace_type = 'slash'
+
+        if type(args[0]) == 'str':
+            grace_type = args[0]
+        
+        notes = args[-2][1]
+        final_note = args[-1]
+
+        return mc_ast.Grace(grace_type, notes, final_note)
 
 
 def main():

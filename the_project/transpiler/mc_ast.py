@@ -76,3 +76,19 @@ class Modifiers(Node):
     def __init__(self, modifiers):
         self.modifiers = modifiers 
     
+
+class Tuplet(Node):
+    name = 'tuplet'
+
+    def __init__(self, fraction, notes_argument_list):
+        self.fraction = fraction
+        self.notes_argument_list = notes_argument_list
+
+
+class Grace(Node):
+    name = 'grace'
+
+    def __init__(self, grace_type, notes, final_note):
+        self.grace_type = grace_type
+        self.notes = notes
+        self.final_note = final_note
