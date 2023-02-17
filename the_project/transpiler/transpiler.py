@@ -49,7 +49,7 @@ def flatten(xs):
 class MyTransformer(Transformer):
     def __init__(self):
         self.metadata = dict()
-        self.note_events = list() # Temporary list of note_events. TODO: Delete
+        self.part_list = list()
         self.articulation_converter = {
             '.': 'staccato',
             '^': 'marcato',
@@ -68,9 +68,8 @@ class MyTransformer(Transformer):
         return [int(n) for n in s.split(',')]
     
     def __determine_tempo_info(self, args):
-        tempo_text = None
-        tempo_number = None
-        measure = '1'
+        tempo_text = ""
+        tempo_number = []
 
         if len(args) == 1:
             if type(args[0]) == str:
@@ -78,24 +77,15 @@ class MyTransformer(Transformer):
             else:
                 tempo_number = args[0]
         elif len(args) == 2:
-            if type(args[0]) == str:
-                tempo_text = args[0]
-                if type(args[1]) == str:
-                    measure = args[1]
-                else:
-                    tempo_number = args[1]
-            else:
-                tempo_number = args[0]
-                measure = args[1]
-        else:
             tempo_text = args[0]
             tempo_number = args[1]
-            measure = args[2]
+        else:
+            sys.stderr.write("something went wrong in __determine_tempo_info\n")
 
-        return tempo_text, tempo_number, measure
+        return tempo_text, tempo_number
 
     def start(self, args):
-        return mc_ast.Start(self.metadata, self.note_events)
+        return mc_ast.Start(self.metadata, self.part_list)
 
     def statement(self, args):
         return args[0]
@@ -123,8 +113,8 @@ class MyTransformer(Transformer):
         return args[0].value
 
     def tempo(self, args):
-        tempo_text, tempo_number, measure = self.__determine_tempo_info(args)
-        tempo = mc_ast.Tempo(tempo_text, tempo_number, measure)
+        tempo_text, tempo_number = self.__determine_tempo_info(args)
+        tempo = mc_ast.Tempo(tempo_text, tempo_number)
 
         return ('tempo', tempo)
 
@@ -136,14 +126,13 @@ class MyTransformer(Transformer):
         args[1] = args[1].value
         return args
     
-    def measure(self, args):
-        return args[0].value[1:]
-    
     def instrument_name(self, args):
         return self.__concatenate_words(args)
 
     def part(self, args):
-        return mc_ast.Part(args[0], args[1], args[2:])
+        part = mc_ast.Part(args[0], args[1], args[2:])
+        self.part_list.append(part)
+        return part
 
     def note_event(self, args):
         event = args[0]
@@ -167,7 +156,6 @@ class MyTransformer(Transformer):
         else:
             sys.stderr.write("ERROR: note_event must be note, rest, or chord.\n")
 
-        self.note_events.append(event)
         return event
 
     def chord(self, args):

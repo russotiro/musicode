@@ -4,17 +4,11 @@ _LPAREN: "("
 _RPAREN: ")"
 _LBRACKET: "["
 _RBRACKET: "]"
-statement: _LPAREN (title | subtitle | composer | tempo | instruments | part) _RPAREN
+statement: _LPAREN (title | subtitle | composer | instruments | part) _RPAREN
 
 title: "title" "\"" WORD+ "\""
 subtitle: "subtitle" "\"" WORD+ "\""
 composer: "composer" "\"" WORD+ "\""
-
-measure: /m[1-9][0-9]*/
-
-tempo: "tempo" (tempo_text | (tempo_text? tempo_number)) measure?
-tempo_text: /\"/ WORD+ /\"/
-tempo_number: "/" duration "=" /[1-9][0-9]*/
 
 instruments: "instruments" instrument+
 
@@ -41,13 +35,19 @@ grace_type: /slash|noSlash/
 tremolo: "tremolo" notes_argument notes_argument // transpiler note: enforce that notes have same duration
 
 // staff events
-staff_event: clef | key | time | barline | symbol | text
-clef: "clef" WORD // define clef database: treble, bass, alto, tenor, neutral...
+staff_event: clef | key | time | tempo | barline | symbol | text
+clef: "clef" WORD
 key: "key" /[A-G][#b]?[Mm]?/
 time: "time" ((/[1-9][0-9]*/ "/" duration) | /common/ | /cut/)
-barline: "barline" WORD // define barline database: single, double, repeatBegin, repeatEnd, final...
+
+tempo: "tempo" (tempo_text | (tempo_text? tempo_number))
+tempo_text: /\"/ WORD+ /\"/
+tempo_number: "/" duration "=" /[1-9][0-9]*/
+
+barline: "barline" WORD
 // transpiler note: if we detect a final barline in the middle of the piece, we must put "Fine" in bold above it
-symbol: "symbol" WORD // define symbol database: CURRENTLY ONLY "segno"
+symbol: "symbol" WORD
+
 text: road_map_text | expression_text | technique_text
 road_map_text: /(D\.C\.|D\.S\.) al ([fF]ine|[cC]oda)/ | /toCoda/
 expression_text: "expression" "\"" WORD+ "\""
@@ -57,7 +57,7 @@ technique_text: "technique" "\"" WORD+ "\""
 note_event: (rest | ((note | chord) modifier_list?)) "/" duration
 rest: ("r" | "R") (_LBRACKET beaming _RBRACKET)?
 note: pitch octave
-chord: note ("_" note)*
+chord: note ("_" note)+
 pitch: /[A-Ga-g][#b]?/
 octave: /[0-8]/
 duration: /(1(6|28)?|2|4|8|32|64)\.{0,3}/

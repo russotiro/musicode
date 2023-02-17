@@ -3,11 +3,9 @@
 (composer "Me")
 (instruments flute clarinet)
 
-(tempo "Allegro non troppo" /4 = 120 m50)
-
 (part flute "Flute"
     (staff
-        (notes (clef treble) (time common) (key C)
+        (notes (clef treble) (time common) (key C) (tempo "Allegro non troppo" /4 = 120)
             E4[staccato stemDown pianoFinger1]/4 E4.^/4 (key Cbm) r/2 E4[phrasingSlurBegin]/4 D4[slurBegin]/4 C4_E4_G4[staccato marcato stemUp ff slurEnd]/2 E4[phrasingSlurEnd]/4 G4/4 C4/4. D4/8 E4/1)
         (voices
             (voice (notes F4/4 F4/4 F4/4. F4/8))

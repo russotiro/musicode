@@ -13,17 +13,16 @@ class Node:
 class Start(Node):
     name = 'start'
     
-    def __init__(self, metadata, note_events=list()):
+    def __init__(self, metadata, part_list=list()):
         self.metadata = metadata
-        self.note_events = note_events
+        self.part_list = part_list
 
 class Tempo(Node):
     name = 'tempo'
 
-    def __init__(self, tempo_text=None, tempo_number=None, measure='1'):
+    def __init__(self, tempo_text, tempo_number):
         self.tempo_text = tempo_text
         self.tempo_number = tempo_number
-        self.measure = measure
 
 class Note(Node):
     name = 'note'
