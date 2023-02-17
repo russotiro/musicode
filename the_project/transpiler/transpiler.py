@@ -96,7 +96,7 @@ class MyTransformer(Transformer):
         return mc_ast.Start(self.metadata, self.note_events)
 
     def statement(self, args):
-        return args
+        return args[0]
 
     def title(self, args):
         title = self.__concatenate_words(args)
@@ -137,6 +137,12 @@ class MyTransformer(Transformer):
     def measure(self, args):
         return args[0].value[1:]
     
+    def instrument_name(self, args):
+        return self.__concatenate_words(args)
+
+    def part(self, args):
+        return ('part', args)
+
     def note_event(self, args):
         event = args[0]
         if isinstance(event, mc_ast.Note): # Augment Note with modifiers & duration if note
