@@ -92,3 +92,19 @@ class Grace(Node):
         self.grace_type = grace_type
         self.notes = notes
         self.final_note = final_note
+
+class Ending(Node):
+    name = 'ending'
+
+    def __init__(self, numbers, content):
+        self.numbers = numbers
+        self.content = content
+
+
+class Part(Node):
+    name = 'part'
+
+    def __init__(self, instr, instr_name, content):
+        self.instrument = instr
+        self.instrument_name = instr_name
+        self.content = content

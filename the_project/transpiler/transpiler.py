@@ -64,6 +64,9 @@ class MyTransformer(Transformer):
     def __symbol_to_word(self, symbol):
         return self.articulation_converter[symbol]
 
+    def __parse_ending_numbers(self, s):
+        return [int(n) for n in s.split(',')]
+    
     def __determine_tempo_info(self, args):
         tempo_text = None
         tempo_number = None
@@ -92,7 +95,6 @@ class MyTransformer(Transformer):
         return tempo_text, tempo_number, measure
 
     def start(self, args):
-        print(args)
         return mc_ast.Start(self.metadata, self.note_events)
 
     def statement(self, args):
@@ -141,7 +143,7 @@ class MyTransformer(Transformer):
         return self.__concatenate_words(args)
 
     def part(self, args):
-        return ('part', args)
+        return mc_ast.Part(args[0], args[1], args[2:])
 
     def note_event(self, args):
         event = args[0]
@@ -284,6 +286,22 @@ class MyTransformer(Transformer):
     def notes(self, args):
         return ('notes', args)
 
+    def voice(self, args):
+        # args[0] is a notes tuple
+        # remove 'notes' from args
+        return ('voice', args[0][1])
+
+    def voices(self, args):
+        # args[0] is a list of voice tuples
+        # remove 'voice' from every arg
+        return ('voices', [v[1] for v in args])
+
+    def note_environment(self, args):
+        return args[0]
+
+    def staff_environment(self, args):
+        return args[0]
+
     def grace(self, args):
         grace_type = 'slash'
 
@@ -294,6 +312,19 @@ class MyTransformer(Transformer):
         final_note = args[-1]
 
         return mc_ast.Grace(grace_type, notes, final_note)
+
+    def tremolo(self, args):
+        return ('tremolo', args[0], args[1])
+
+    def coda(self, args):
+        return ('coda', args)
+
+    def ending(self, args):
+        numbers = args[0].value
+        return mc_ast.Ending(self.__parse_ending_numbers(numbers), args[1:])
+
+    def staff(self, args):
+        return ('staff', args)
 
 
 def main():
@@ -308,10 +339,12 @@ def main():
     tree = parser.parse(musicode_file.read())
     result = MyTransformer().transform(tree)
 
-    print("\n\nOriginal tree:\n\n")
-    print(tree)
-    print(result.metadata)
-    print(result.note_events)
+    # print("\n\nOriginal tree:\n\n")
+    # print(tree)
+    # print(result.metadata)
+    # print(result.note_events)
+
+    print(result)
 
 
 if __name__ == '__main__':
