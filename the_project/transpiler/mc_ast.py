@@ -28,9 +28,11 @@ class Tempo(Node):
 class Note(Node):
     name = 'note'
 
-    def __init__(self, pitch, octave):
+    def __init__(self, pitch=None, octave=None, modifiers=None, duration=None):
         self.pitch = pitch 
         self.octave = octave 
+        self.modifiers = modifiers 
+        self.duration = duration 
     
     def set_modifiers(self, modifiers):
         self.modifiers = modifiers 
@@ -40,6 +42,10 @@ class Note(Node):
 
 class Rest(Node):
     name = 'rest'
+
+    def __init__(self, beaming=None, duration=None):
+        self.beaming = beaming 
+        self.duration = duration 
 
     def set_beaming(self, beaming):
         self.beaming = beaming 
@@ -51,8 +57,10 @@ class Rest(Node):
 class Chord(Node):
     name = 'chord'
 
-    def __init__(self, notes):
+    def __init__(self, notes, modifiers=None, duration=None):
         self.notes = notes
+        self.modifiers = modifiers 
+        self.duration = duration 
 
     def set_modifiers(self, modifiers):
         self.modifiers = modifiers

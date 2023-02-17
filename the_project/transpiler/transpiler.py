@@ -152,16 +152,18 @@ class MyTransformer(Transformer):
                 modifiers = args[1]
             else:
                 modifiers = mc_ast.Modifiers([])
-            event.set_modifiers(modifiers)
-            event.set_duration(duration)
+            event.modifiers = modifiers
+            event.duration = duration
         elif isinstance(event, mc_ast.Rest): # Augment Rest with duration if rest 
             duration = args[-1]
-            event.set_duration(duration)
-        else:
+            event.duration = duration
+        elif isinstance(event, mc_ast.Chord):
             mods = args[1] if len(args) == 3 else mc_ast.Modifiers([])
             duration = args[-1]
-            event.set_duration(duration)
-            event.set_modifiers(mods)
+            event.duration = duration
+            event.modifiers = mods
+        else:
+            sys.stderr.write("ERROR: note_event must be note, rest, or chord.\n")
 
         self.note_events.append(event)
         return event
@@ -214,7 +216,7 @@ class MyTransformer(Transformer):
             elif type(arg) == str:
                 modifiers.append(self.__symbol_to_word(arg))
             else:
-                print('Something\'s gone horribly wrong in modifier_list')
+                sys.stderr.write('Something\'s gone horribly wrong in modifier_list\n')
         
         print("Modifiers: ")
         print(modifiers)
