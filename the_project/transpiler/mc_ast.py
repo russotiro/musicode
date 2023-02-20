@@ -2,6 +2,8 @@
 An intermediate representation of MusiCode code.
 '''
 
+import modifier_dictionary
+
 class Node:
     name = 'node'
 
@@ -39,6 +41,18 @@ class Note(Node):
     def set_duration(self, duration):
         self.duration = duration 
 
+    def render(self):
+        lily = self.pitch.lower() + self.lily_octave(self.octave) + self.duration
+        return lily + self.modifiers.render()
+
+    def lily_octave(self, octave):
+        octave = int(octave)
+        if octave >= 3:
+            return "'" * (octave - 3)
+        else:
+            return "," * (3 - octave)
+
+
 class Rest(Node):
     name = 'rest'
 
@@ -73,8 +87,20 @@ class Modifiers(Node):
     # TODO: Decide if it makes more sense to group modifiers 
     # (i.e. put articulation modifiers together, dynamic modifiers together, etc.)
     def __init__(self, modifiers):
-        self.modifiers = modifiers 
-    
+        self.modifiers = modifiers
+
+        self.modifier_dictionary = modifier_dictionary.mc_to_lily_modifiers
+
+    def render(self):
+        lily_modifier_list = list()
+        for modifier in self.modifiers:
+            if modifier in self.modifier_dictionary:
+                lily_modifier_list.append(self.modifier_dictionary[modifier])
+            else:
+                lily_modifier_list.append("\\" + modifier)
+        
+        return ' '.join(lily_modifier_list)
+
 
 class Tuplet(Node):
     name = 'tuplet'

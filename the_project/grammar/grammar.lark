@@ -67,9 +67,9 @@ modifier_list: ((_LBRACKET modifier_keyword+ _RBRACKET) | articulation_symbol)+
 modifier_keyword: articulation_keyword | /stemUp|stemDown/ | piano_keyword | dynamics_keyword | beaming
 articulation_keyword: /staccato|marcato|tenuto|accent|fermata|tie|gliss(ando)?|(phrasingSlur|slur)(Begin|End)|tremolo(8|16|32)|trill/
 articulation_symbol: /\./ | /\^/ | /_/ | />/ | /~/
-piano_keyword: /pedalBegin/ | /pedalEnd/ | /lift/ | /pianoFinger[1-5]/
+piano_keyword: /pedalBegin/ | /pedalEnd/ | /pedalLift/ | /pianoFinger[1-5]/
 dynamics_keyword: /p{1,3}/ | /m[pf]/ | /f{1,3}/ | /s[pf]/ | /sfz/ | /fp/ | /cresc(endo)?(Text)?(Begin|End)/ | /(decresc(endo)?|dim(inuendo)?)(Text)?(Begin|End)/
-beaming: /beam(None|Begin|End|Up|Down)|beamStem(Left|Right)Count[0-4]/
+beaming: /beam(None|Begin(Up|Down)?|End)|beamStem(Left|Right)Count[0-5]/
 
 %ignore " "
 %ignore "\n"

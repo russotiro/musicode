@@ -315,6 +315,10 @@ class MyTransformer(Transformer):
         return ('staff', args)
 
 
+# def render_lily(abstract_tree):
+#     note = mc_ast.Note("G", 4, , 4)
+
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: python3 transpiler.py musicodeFile")
@@ -327,12 +331,9 @@ def main():
     tree = parser.parse(musicode_file.read())
     result = MyTransformer().transform(tree)
 
-    # print("\n\nOriginal tree:\n\n")
-    # print(tree)
-    # print(result.metadata)
-    # print(result.note_events)
-
     print(result)
+
+    # render_lily(result)
 
 
 if __name__ == '__main__':
