@@ -41,9 +41,22 @@ class Note(Node):
     def set_duration(self, duration):
         self.duration = duration 
 
+    def render_pitch_octave(self):
+        return self.lily_pitch(self.pitch) + self.lily_octave(self.octave)
+
     def render(self):
-        lily = self.pitch.lower() + self.lily_octave(self.octave) + self.duration
+        lily = self.render_pitch_octave() + self.duration
         return lily + self.modifiers.render()
+    
+    def lily_pitch(self, pitch):
+        if len(pitch) == 1:
+            return pitch.lower()
+        elif len(pitch) == 2 and pitch[1] == "#":
+            return pitch[0].lower() + "is"
+        elif len(pitch) == 2 and pitch[1] == "b":
+            return pitch[0].lower() + "es"
+        else:
+            sys.stderr.write("ERROR: Invalid pitch.\n")
 
     def lily_octave(self, octave):
         octave = int(octave)
@@ -65,6 +78,10 @@ class Rest(Node):
     
     def set_duration(self, duration):
         self.duration = duration
+    
+    def render(self):
+        lily = "r" + self.duration 
+        return lily + Modifiers(self.beaming).render()
 
 
 class Chord(Node):
@@ -80,6 +97,14 @@ class Chord(Node):
 
     def set_duration(self, duration):
         self.duration = duration
+    
+    def render(self):
+        lily = "<"
+        for note in self.notes:
+            lily += note.render_pitch_octave()
+        lily += ">"
+        lily += self.duration 
+        return lily + self.modifiers.render()
 
 
 class Modifiers(Node):
