@@ -211,7 +211,7 @@ class MyTransformer(Transformer):
     # staff events
 
     def clef(self, args):
-        return ('clef', args[0].value)
+        return mc_ast.Clef(args[0].value)
 
     def key(self, args):
         return ('key', args[0].value)

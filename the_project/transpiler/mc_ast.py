@@ -5,6 +5,9 @@ An intermediate representation of MusiCode code.
 import modifier_dictionary
 import sys
 
+mc_to_lily_modifiers = modifier_dictionary.mc_to_lily_modifiers
+
+
 class Node:
     name = 'node'
 
@@ -48,6 +51,16 @@ class Barline(Node):
         }[self.type]
 
         return ('\\bar "%s"' % line)
+
+
+class Clef(Node):
+    name = 'clef'
+
+    def __init__(self, value=""):
+        self.value = value
+
+    def render(self):
+        return "\\clef " + self.value + " "
 
 
 class Note(Node):
@@ -138,13 +151,11 @@ class Modifiers(Node):
     def __init__(self, modifiers):
         self.modifiers = modifiers
 
-        self.modifier_dictionary = modifier_dictionary.mc_to_lily_modifiers
-
     def render(self):
         lily_modifier_list = list()
         for modifier in self.modifiers:
-            if modifier in self.modifier_dictionary:
-                lily_modifier_list.append(self.modifier_dictionary[modifier])
+            if modifier in mc_to_lily_modifiers:
+                lily_modifier_list.append(mc_to_lily_modifiers[modifier])
             else:
                 lily_modifier_list.append("\\" + modifier)
         

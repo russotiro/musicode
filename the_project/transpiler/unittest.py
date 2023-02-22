@@ -115,6 +115,12 @@ def test_tempo():
     assert_equal(text, '\\tempo "asiago" ')
 
 
+def test_clef():
+    clef = mc_ast.Clef('bass').render()
+    assert(clef == "\\clef bass ")
+    clef = mc_ast.Clef('alto').render()
+    assert(clef == "\\clef alto ")
+
 
 test_note()
 test_modifiers()
@@ -124,3 +130,4 @@ test_symbol()
 test_text()
 test_barline()
 test_tempo()
+test_clef()
