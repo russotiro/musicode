@@ -2,6 +2,14 @@
 
 import mc_ast
 
+
+def assert_equal(p1, p2):
+    print('%r == %r...' % (p1, p2), end='')
+    assert(p1 == p2)
+    print("\t\tOK")
+
+
+
 def test_note():
     note = mc_ast.Note("G", "4", mc_ast.Modifiers([]), "4").render()
     assert(note == "g'4")
@@ -82,9 +90,37 @@ def test_text():
     text = mc_ast.Text('technique', 'straight mute').render() 
     assert(text == '\\mark "straight mute"')
 
+
+def test_barline():
+    text = mc_ast.Barline('single').render()
+    assert_equal(text, '\\bar "|"')
+    text = mc_ast.Barline('double').render()
+    assert_equal(text, '\\bar "||"')
+    text = mc_ast.Barline('repeatBegin').render()
+    assert_equal(text, '\\bar ".|:"')
+    text = mc_ast.Barline('repeatEnd').render()
+    assert_equal(text, '\\bar ":|."')
+    text = mc_ast.Barline('final').render()
+    assert_equal(text, '\\bar "|."')
+    text = mc_ast.Barline('dotted').render()
+    assert_equal(text, '\\bar ";"')
+
+
+def test_tempo():
+    text = mc_ast.Tempo('asiago', '4 = 120').render()
+    assert_equal(text, '\\tempo "asiago" 4 = 120')
+    text = mc_ast.Tempo('', '4 = 120').render()
+    assert_equal(text, '\\tempo "" 4 = 120')
+    text = mc_ast.Tempo('asiago', '').render()
+    assert_equal(text, '\\tempo "asiago" ')
+
+
+
 test_note()
 test_modifiers()
 test_rest()
 test_chord()
 test_symbol()
 test_text()
+test_barline()
+test_tempo()

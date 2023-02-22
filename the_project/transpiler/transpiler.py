@@ -26,11 +26,6 @@ def octave2int(o):
 def duration2int(d):
     return int(math.log(d, 2))
 
-# Add double bar line to the sequence 'parent' 
-# def add_double_barline(parent):
-#     barline_cmd = dom.Command("bar", parent=parent)
-#     barline_txt = dom.Text("\"|.\"", parent=barline_cmd)
-
 
 
 def flatten(xs):
@@ -233,7 +228,7 @@ class MyTransformer(Transformer):
         barline_database = ['single', 'double', 'repeatBegin', 'repeatEnd', 'final', 'dotted']
 
         if args[0].value in barline_database:
-            return ('barline', args[0].value)
+            return mc_ast.Barline(args[0].value)
         else:
             sys.stderr.write("You tried to set an invalid barline type: " + args[0].value + "\n")
 

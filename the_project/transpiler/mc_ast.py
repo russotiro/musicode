@@ -27,6 +27,29 @@ class Tempo(Node):
         self.tempo_text = tempo_text
         self.tempo_number = tempo_number
 
+    def render(self):
+        return ("\\tempo \"%s\" %s" % (self.tempo_text, self.tempo_number))
+
+
+class Barline(Node):
+    name = 'barline'
+
+    def __init__(self, type):
+        self.type = type
+
+    def render(self):
+        line = {
+            'single': '|',
+            'double': '||',
+            'repeatBegin': '.|:',
+            'repeatEnd': ':|.',
+            'final': '|.',
+            'dotted': ';'
+        }[self.type]
+
+        return ('\\bar "%s"' % line)
+
+
 class Note(Node):
     name = 'note'
 
