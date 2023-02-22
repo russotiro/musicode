@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import mc_ast
 
 def test_note():
@@ -55,7 +57,34 @@ def test_chord():
     chord = mc_ast.Chord([mc_ast.Note("D", "4"), mc_ast.Note("F#", "4"), mc_ast.Note("A", "4")], mc_ast.Modifiers(["staccato", "ff", "marcato", "tremolo32", "beamNone"]), "4.").render()
     assert(chord == "<d'fis'a'>4.\\staccato \\ff \\marcato :32 \\noBeam")
 
+def test_symbol():
+    segno = mc_ast.Symbol('segno').render()
+    assert(segno == '\\Segno')
+
+def test_text():
+    # Test road map cases 
+    text = mc_ast.Text('road_map', 'd.c. al fine').render()
+    assert(text == '\\DCfine')
+    text = mc_ast.Text('road_map', 'd.s. al fine').render()
+    assert(text == '\\DSfine')
+    text = mc_ast.Text('road_map', 'd.c. al coda').render()
+    assert(text == '\\DCcoda')
+    text = mc_ast.Text('road_map', 'd.s. al coda').render()
+    assert(text == '\\DScoda')
+    text = mc_ast.Text('road_map', 'toCoda').render()
+    assert(text == '\\GotoCoda')
+
+    # Test expression text 
+    text = mc_ast.Text('expression', 'dolce').render()
+    assert(text == '\\tweak direction #DOWN \\mark \\markup { \\small \\italic "dolce" }')
+
+    # Test technique text 
+    text = mc_ast.Text('technique', 'straight mute').render() 
+    assert(text == '\\mark "straight mute"')
+
 test_note()
 test_modifiers()
 test_rest()
 test_chord()
+test_symbol()
+test_text()

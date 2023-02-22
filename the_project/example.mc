@@ -12,7 +12,7 @@
             (voice (notes C4/2 C4[crescendoBegin]/2)))
         (notes
             (tuplet 3/2 F4[dimTextBegin]/4 E4[dimTextEnd]/4 E4[tie]/4) E4/4 E4[crescEnd]/4
-            E4[pedalBegin]/4 D4/4 D4[lift]/4 E4/4 D4[pedalEnd]/2 G4/2
+            E4[pedalBegin]/4 D4/4 D4[pedalLift]/4 E4/4 D4[pedalEnd]/2 G4/2
             (clef bass) E4/4 E4/4 E4/2 E4/4 E4/4 E4/2)
 
         (ending 3,1,7 (notes F4/4 F4/4 F4/4. F4/8) (notes F4/2 F4/2 F4/2. F4/4))))

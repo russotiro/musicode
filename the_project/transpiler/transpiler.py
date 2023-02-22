@@ -241,18 +241,18 @@ class MyTransformer(Transformer):
         symbol_database = ['segno']
 
         if args[0].value in symbol_database:
-            return ('symbol', args[0].value)
+            return mc_ast.Symbol(args[0].value)
         else:
             sys.stderr.write("You tried to set an invalid symbol type: " + args[0].value + "\n")
 
     def road_map_text(self, args):
-        return ('road_map_text', args[0].value.lower())
+        return mc_ast.Text('road_map', args[0].value.lower())
 
     def expression_text(self, args):
-        return ('expression_text', self.__concatenate_words(args))
+        return mc_ast.Text('expression', self.__concatenate_words(args))
 
     def technique_text(self, args):
-        return ('technique_text', self.__concatenate_words(args))
+        return mc_ast.Text('technique', self.__concatenate_words(args))
 
     def text(self, args):
         return args[0]

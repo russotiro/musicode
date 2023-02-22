@@ -3,6 +3,7 @@ An intermediate representation of MusiCode code.
 '''
 
 import modifier_dictionary
+import sys
 
 class Node:
     name = 'node'
@@ -125,6 +126,45 @@ class Modifiers(Node):
                 lily_modifier_list.append("\\" + modifier)
         
         return ' '.join(lily_modifier_list)
+
+class Symbol(Node):
+    name = 'symbol'
+
+    def __init__(self, s_type):
+        self.type = s_type 
+    
+    def render(self):
+        if self.type == 'segno':
+            return '\\Segno'
+        else:
+            sys.stderr.write('Something\'s gone horribly wrong in Symbol rendering!\n')
+
+class Text(Node):
+    name = 'text'
+
+    def __init__(self, t_type, contents):
+        self.type = t_type 
+        self.contents = contents 
+    
+    def __set_road_map_converter(self):
+        self.road_map_converter = {
+            'd.c. al fine': '\\DCfine',
+            'd.c. al coda': '\\DCcoda',
+            'd.s. al fine': '\\DSfine',
+            'd.s. al coda': '\\DScoda',
+            'toCoda': '\\GotoCoda'
+        }
+    
+    def render(self):
+        if self.type == 'road_map':
+            self.__set_road_map_converter()
+            return self.road_map_converter[self.contents]
+        elif self.type == 'expression':
+            return f'\\tweak direction #DOWN \\mark \\markup {{ \\small \\italic "{self.contents}" }}'
+        elif self.type == 'technique':
+            return f'\\mark "{self.contents}"'
+        else:
+            sys.stderr.write('Tried to render Text of invalid type.\n')
 
 
 class Tuplet(Node):
