@@ -117,9 +117,18 @@ def test_tempo():
 
 def test_clef():
     clef = mc_ast.Clef('bass').render()
-    assert(clef == "\\clef bass ")
+    assert(clef == "\\clef bass")
     clef = mc_ast.Clef('alto').render()
-    assert(clef == "\\clef alto ")
+    assert(clef == "\\clef alto")
+
+
+def test_key():
+    key = mc_ast.Key("Cbm").render()
+    assert_equal(key, "\\key ces \\minor")
+    key = mc_ast.Key("f#M").render()
+    assert_equal(key, "\\key fis \\major")
+    key = mc_ast.Key("g").render()
+    assert_equal(key, "\\key g \\major")
 
 
 test_note()
@@ -131,3 +140,4 @@ test_text()
 test_barline()
 test_tempo()
 test_clef()
+test_key()

@@ -60,14 +60,27 @@ class Clef(Node):
         self.value = value
 
     def render(self):
-        return "\\clef " + self.value + " "
+        return "\\clef " + self.value
+
+
+class Key(Node):
+    name = 'key'
+
+    def __init__(self, value=""):
+        self.mode = "major"
+        if 'm' in value:
+            self.mode = "minor"
+        self.pitch = Pitch(value.replace('m','').replace('M',''))
+
+    def render(self):
+        return "\\key " + self.pitch.render() + " \\" + self.mode
 
 
 class Note(Node):
     name = 'note'
 
     def __init__(self, pitch=None, octave=None, modifiers=None, duration=None):
-        self.pitch = pitch 
+        self.pitch = Pitch(pitch)
         self.octave = octave 
         self.modifiers = modifiers 
         self.duration = duration 
@@ -79,12 +92,29 @@ class Note(Node):
         self.duration = duration 
 
     def render_pitch_octave(self):
-        return self.lily_pitch(self.pitch) + self.lily_octave(self.octave)
+        return self.pitch.render() + self.lily_octave(self.octave)
 
     def render(self):
         lily = self.render_pitch_octave() + self.duration
         return lily + self.modifiers.render()
-    
+
+    def lily_octave(self, octave):
+        octave = int(octave)
+        if octave >= 3:
+            return "'" * (octave - 3)
+        else:
+            return "," * (3 - octave)
+
+
+class Pitch(Node):
+    name = 'pitch'
+
+    def __init__(self, pitch=""):
+        self.pitch = pitch
+
+    def render(self):
+        return self.lily_pitch(self.pitch)
+
     def lily_pitch(self, pitch):
         if len(pitch) == 1:
             return pitch.lower()
@@ -94,13 +124,6 @@ class Note(Node):
             return pitch[0].lower() + "es"
         else:
             sys.stderr.write("ERROR: Invalid pitch.\n")
-
-    def lily_octave(self, octave):
-        octave = int(octave)
-        if octave >= 3:
-            return "'" * (octave - 3)
-        else:
-            return "," * (3 - octave)
 
 
 class Rest(Node):

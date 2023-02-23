@@ -211,10 +211,10 @@ class MyTransformer(Transformer):
     # staff events
 
     def clef(self, args):
-        return mc_ast.Clef(args[0].value)
+        return ('clef', mc_ast.Clef(args[0].value))
 
     def key(self, args):
-        return ('key', args[0].value)
+        return ('key', mc_ast.Key(args[0].value))
 
     def time(self, args):
         if len(args) == 1:
