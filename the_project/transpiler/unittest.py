@@ -131,6 +131,15 @@ def test_key():
     assert_equal(key, "\\key g \\major")
 
 
+def test_time():
+    time = mc_ast.Time("common").render()
+    assert_equal(time, "\\defaultTimeSignature\n\\time 4/4")
+    time = mc_ast.Time("cut").render()
+    assert_equal(time, "\\defaultTimeSignature\n\\time 2/2")
+    time = mc_ast.Time(['7','8']).render()
+    assert_equal(time, "\\numericTimeSignature\n\\time 7/8")
+
+
 test_note()
 test_modifiers()
 test_rest()
@@ -141,3 +150,4 @@ test_barline()
 test_tempo()
 test_clef()
 test_key()
+test_time()

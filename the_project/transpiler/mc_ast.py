@@ -76,6 +76,23 @@ class Key(Node):
         return "\\key " + self.pitch.render() + " \\" + self.mode
 
 
+class Time(Node):
+    name = 'time'
+
+    def __init__(self, time=None):
+        self.time = time
+
+    def render(self):
+        if self.time == 'common':
+            return "\\defaultTimeSignature\n\\time 4/4"
+        elif self.time == 'cut':
+            return "\\defaultTimeSignature\n\\time 2/2"
+        else:
+            string = "\\numericTimeSignature\n\\time "
+            string += self.time[0] + "/" + self.time[1]
+            return string
+
+
 class Note(Node):
     name = 'note'
 

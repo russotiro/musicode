@@ -218,9 +218,9 @@ class MyTransformer(Transformer):
 
     def time(self, args):
         if len(args) == 1:
-            return ('time', args[0].value)
+            return ('time', mc_ast.Time(args[0].value))
         elif len(args) == 2:
-            return ('time', [args[0].value, args[1]])
+            return ('time', mc_ast.Time([args[0].value, args[1]]))
         else:
             sys.stderr.write("something went wrong in time\n")
 
