@@ -197,6 +197,7 @@ class Modifiers(Node):
             if modifier in mc_to_lily_modifiers:
                 lily_modifier_list.append(mc_to_lily_modifiers[modifier])
             else:
+                # Assume modifier is just prepended by a backslash if not in dictionary 
                 lily_modifier_list.append("\\" + modifier)
         
         return ' '.join(lily_modifier_list)
@@ -286,23 +287,36 @@ class Tremolo(Node):
             sys.stderr.write("Invalid tremolo: differing note durations\n")
 
     def render(self):
-        duration = 2**(2 + self.num_bars)
-        first_dot_index = self.note1.duration.find('.')
-        num_dots = 0
-        original_duration_no_dots = 0
-        if first_dot_index == -1:
-            num_dots = 0
-            original_duration_no_dots = int(self.note1.duration)
-        else:
-            num_dots = len(self.note1.duration[first_dot_index:])
-            original_duration_no_dots = int(self.note1.duration[:first_dot_index])
+        # Get the Lilypond duration of each note in tremolo (2^(2+num_bars))
+        # 1 bar = 8th note, 2 bars = 16th note, 3 bars = 32nd note
+        ly_duration = 2 ** (2 + self.num_bars)
 
-        reps = 2**(1 + self.num_bars) / original_duration_no_dots
+        # Find index of first dot in duration (parsing numerical value from dots)
+        first_dot_index = self.note1.duration.find('.')
+
+        num_dots = 0
+        mc_duration_no_dots = 0
+        if first_dot_index == -1: # Case 1: No dots in duration 
+            num_dots = 0
+            mc_duration_no_dots = int(self.note1.duration)
+        else: # Case 2: At least one dot in duration 
+            num_dots = len(self.note1.duration[first_dot_index:])
+            mc_duration_no_dots = int(self.note1.duration[:first_dot_index])
+
+        # Get the Lilypond number of repeats without accounting for dotted rhythms:
+        # num_repeats = ly_duration / (2 * mc_duration_without_dots)
+        # This is the number of times that the tremolo pattern is repeated
+        # The 2 accounts for two notes per repetition 
+        reps = ly_duration / (2 * mc_duration_no_dots)
+
+        # Account for dotted rhythms, increasing length by 1-(1/2)^num_dots percent 
         reps += (1 - 0.5**num_dots) * reps
 
-        self.note1.duration = str(duration)
-        self.note2.duration = str(duration)
+        # Edit Note durations from MusiCode duration to LilyPond duration 
+        self.note1.duration = str(ly_duration)
+        self.note2.duration = str(ly_duration)
 
+        # Produce and return output string 
         result = "\\repeat tremolo " + str(int(reps)) + " { " + self.note1.render()
         return result + " " + self.note2.render() + " }"
 
