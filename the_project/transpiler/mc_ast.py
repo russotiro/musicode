@@ -248,6 +248,10 @@ class Tuplet(Node):
         self.fraction = fraction
         self.notes_argument_list = notes_argument_list
 
+    def render(self):
+        string = "\\tuplet " + self.fraction + " { "
+        return string + ' '.join([arg.render() for arg in self.notes_argument_list]) + " }"
+
 
 class Grace(Node):
     name = 'grace'
@@ -256,6 +260,52 @@ class Grace(Node):
         self.grace_type = grace_type
         self.notes = notes
         self.final_note = final_note
+
+    def render(self):
+        result = ""
+        if self.grace_type == "slash":
+            result += "\\slashedGrace"
+        elif self.grace_type == "noSlash":
+            result += "\\grace"
+        else:
+            sys.stderr.write("Grace type must be slash or noSlash.\n")
+        result += " { " + ' '.join([arg.render() for arg in self.notes]) + " } "
+
+        return result + self.final_note.render()
+
+
+class Tremolo(Node):
+    name = 'tremolo'
+
+    def __init__(self, num_bars, note1, note2):
+        self.num_bars = int(num_bars)
+        self.note1 = note1
+        self.note2 = note2
+        
+        if note1.duration != note2.duration:
+            sys.stderr.write("Invalid tremolo: differing note durations\n")
+
+    def render(self):
+        duration = 2**(2 + self.num_bars)
+        first_dot_index = self.note1.duration.find('.')
+        num_dots = 0
+        original_duration_no_dots = 0
+        if first_dot_index == -1:
+            num_dots = 0
+            original_duration_no_dots = int(self.note1.duration)
+        else:
+            num_dots = len(self.note1.duration[first_dot_index:])
+            original_duration_no_dots = int(self.note1.duration[:first_dot_index])
+
+        reps = 2**(1 + self.num_bars) / original_duration_no_dots
+        reps += (1 - 0.5**num_dots) * reps
+
+        self.note1.duration = str(duration)
+        self.note2.duration = str(duration)
+
+        result = "\\repeat tremolo " + str(int(reps)) + " { " + self.note1.render()
+        return result + " " + self.note2.render() + " }"
+
 
 class Ending(Node):
     name = 'ending'

@@ -297,7 +297,7 @@ class MyTransformer(Transformer):
         return mc_ast.Grace(grace_type, notes, final_note)
 
     def tremolo(self, args):
-        return ('tremolo', args[0], args[1])
+        return mc_ast.Tremolo(*args)
 
     def coda(self, args):
         return ('coda', args)

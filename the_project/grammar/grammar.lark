@@ -32,7 +32,7 @@ note_environment: _LPAREN (tuplet | grace | tremolo) _RPAREN
 tuplet: "tuplet" /[1-9][0-9]*\/[1-9][0-9]*/ notes_argument+
 grace: "grace" grace_type? _LPAREN notes _RPAREN (note_event | note_environment)
 grace_type: /slash|noSlash/
-tremolo: "tremolo" notes_argument notes_argument // transpiler note: enforce that notes have same duration
+tremolo: "tremolo" /[1-3]/ note_event~2 // transpiler note: enforce that notes have same duration
 
 // staff events
 staff_event: clef | key | time | tempo | barline | symbol | text

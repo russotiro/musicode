@@ -9,6 +9,15 @@ def assert_equal(p1, p2):
     print("\t\tOK")
 
 
+note1 = mc_ast.Note("G", "4", mc_ast.Modifiers([]), "4")
+note2 = mc_ast.Note("C", "6", mc_ast.Modifiers([]), "2")
+note3 = mc_ast.Note("A", "1", mc_ast.Modifiers([]), "16")
+note4 = mc_ast.Note("G#", "4", mc_ast.Modifiers([]), "4")
+note5 = mc_ast.Note("A", "4", mc_ast.Modifiers([]), "2")
+note6 = mc_ast.Note("C", "5", mc_ast.Modifiers([]), "2")
+note7 = mc_ast.Note("A", "4", mc_ast.Modifiers([]), "2.")
+note8 = mc_ast.Note("C", "5", mc_ast.Modifiers([]), "2.")
+
 
 def test_note():
     note = mc_ast.Note("G", "4", mc_ast.Modifiers([]), "4").render()
@@ -140,6 +149,27 @@ def test_time():
     assert_equal(time, "\\numericTimeSignature\n\\time 7/8")
 
 
+def test_tuplet_basic():
+    tup = mc_ast.Tuplet("3/2", [note1, note2, note3]).render()
+    assert_equal(tup, "\\tuplet 3/2 { g'4 c'''2 a,,16 }")
+
+
+def test_grace_basic():
+    grace = mc_ast.Grace("noSlash", [note1, note2], note3).render()
+    assert_equal(grace, "\\grace { g'4 c'''2 } a,,16")
+    grace = mc_ast.Grace("slash", [note1, note2], note3).render()
+    assert_equal(grace, "\\slashedGrace { g'4 c'''2 } a,,16")
+
+
+def test_tremolo():
+    trem = mc_ast.Tremolo("1", note1, note4).render()
+    assert_equal(trem, "\\repeat tremolo 1 { g'8 gis'8 }")
+    trem = mc_ast.Tremolo("3", note5, note6).render()
+    assert_equal(trem, "\\repeat tremolo 8 { a'32 c''32 }")
+    trem = mc_ast.Tremolo("2", note7, note8).render()
+    assert_equal(trem, "\\repeat tremolo 6 { a'16 c''16 }")
+
+
 test_note()
 test_modifiers()
 test_rest()
@@ -151,3 +181,6 @@ test_tempo()
 test_clef()
 test_key()
 test_time()
+test_tuplet_basic()
+test_grace_basic()
+test_tremolo()
