@@ -1,0 +1,3 @@
+[submodule "hello-app"]
+	path = hello-app
+	url = https://github.com/Zegger/hello-app
