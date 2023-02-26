@@ -385,6 +385,48 @@ class Tremolo(Node):
         result = "\\repeat tremolo " + str(int(reps)) + " { " + self.note1.render()
         return result + " " + self.note2.render() + " }"
 
+class Notes(Node):
+    name = 'notes'
+
+    def __init__(self, notes):
+        self.notes = notes 
+    
+    def render_notes(self):
+        return ' '.join([arg.render() for arg in self.notes])
+    
+    def render(self):
+        print(self.notes)
+        return '{ ' + self.render_notes() + ' }'
+
+class Voice(Node):
+    name = 'voice'
+
+    def __init__(self, notes):
+        self.notes = notes 
+        self.voiceNumKeywords = ['voiceOne', 'voiceTwo', 'voiceThree', 'voiceFour']
+    
+    def render(self, voiceNum):
+        # voiceNum is voice number MINUS ONE (e.g. 0 should be inputted for voiceOne)
+        if voiceNum < 0 or voiceNum > 3:
+            sys.stderr.write(f'ERROR: Invalid voiceNum {voiceNum}; must be between 0 and 3\n')
+        return f'\\new Voice {{ \\{self.voiceNumKeywords[voiceNum]} {self.notes.render_notes()} }}'
+
+class Voices(Node):
+    name = 'voices'
+
+    def __init__(self, voices):
+        self.voices = voices 
+    
+    def render(self):
+        if len(self.voices) > 4:
+            sys.stderr.write(f'ERROR: Cannot transpile. There are {len(self.voices)} voices in a '
+                              'voices block. The maximum number of voices supported is 4.\n')
+        
+        result = '<<\n'
+        for i in range(len(self.voices)):
+            result += self.voices[i].render(i) + '\n'
+        result += '>> \\oneVoice\n'
+        return result 
 
 class Ending(Node):
     name = 'ending'

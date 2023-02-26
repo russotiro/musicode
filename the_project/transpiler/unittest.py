@@ -18,6 +18,19 @@ note6 = mc_ast.Note("C", "5", mc_ast.Modifiers([]), "2")
 note7 = mc_ast.Note("A", "4", mc_ast.Modifiers([]), "2.")
 note8 = mc_ast.Note("C", "5", mc_ast.Modifiers([]), "2.")
 
+def reset_notes():
+    # Revert global notes back to original values in case they got 
+    # modified (e.g. in the case of tremolo)
+    global note1, note2, note3, note4, note5, note6, note7, note8
+    note1 = mc_ast.Note("G", "4", mc_ast.Modifiers([]), "4")
+    note2 = mc_ast.Note("C", "6", mc_ast.Modifiers([]), "2")
+    note3 = mc_ast.Note("A", "1", mc_ast.Modifiers([]), "16")
+    note4 = mc_ast.Note("G#", "4", mc_ast.Modifiers([]), "4")
+    note5 = mc_ast.Note("A", "4", mc_ast.Modifiers([]), "2")
+    note6 = mc_ast.Note("C", "5", mc_ast.Modifiers([]), "2")
+    note7 = mc_ast.Note("A", "4", mc_ast.Modifiers([]), "2.")
+    note8 = mc_ast.Note("C", "5", mc_ast.Modifiers([]), "2.")
+
 metadata1 = {
     'title': 'Jingle Bells',
     'subtitle': '2000 version',
@@ -174,10 +187,33 @@ def test_tremolo():
     assert_equal(trem, "\\repeat tremolo 8 { a'32 c''32 }")
     trem = mc_ast.Tremolo("2", note7, note8).render()
     assert_equal(trem, "\\repeat tremolo 6 { a'16 c''16 }")
+    reset_notes() # Reset globals since tremolo modifies them
 
 def test_header():
     start = mc_ast.Start(metadata1).render_header()
     assert_equal(start, "\\header {\n    title = \"Jingle Bells\"\n    subtitle = \"2000 version\"\n    composer = \"John Doe\"\n}\n")
+
+def test_notes():
+    notes = mc_ast.Notes([note1, note2, note3, note4]).render()
+    assert_equal(notes, "{ g'4 c'''2 a,,16 gis'4 }")
+    notes = mc_ast.Notes([mc_ast.Clef("bass"), mc_ast.Time("common"), mc_ast.Note("C", "4", mc_ast.Modifiers(["staccato"]), "1")]).render()
+    assert_equal(notes, """{ \\clef bass \\defaultTimeSignature
+\\time 4/4 c'1\\staccato }""")
+
+def test_voice():
+    voice = mc_ast.Voice(mc_ast.Notes([note1, note2, note3, note4])).render(0)
+    assert_equal(voice, "\\new Voice { \\voiceOne g'4 c'''2 a,,16 gis'4 }")
+    voice = mc_ast.Voice(mc_ast.Notes([note1, note2, note3, note4])).render(3)
+    assert_equal(voice, "\\new Voice { \\voiceFour g'4 c'''2 a,,16 gis'4 }")
+
+def test_voices():
+    voices = mc_ast.Voices([mc_ast.Voice(mc_ast.Notes([note1, note2, note3, note4])), \
+                            mc_ast.Voice(mc_ast.Notes([note5, note6, note7, note8]))]).render()
+    assert_equal(voices, """<<
+\\new Voice { \\voiceOne g'4 c'''2 a,,16 gis'4 }
+\\new Voice { \\voiceTwo a'2 c''2 a'2. c''2. }
+>> \\oneVoice
+""")
 
 test_note()
 test_modifiers()
@@ -194,3 +230,6 @@ test_tuplet_basic()
 test_grace_basic()
 test_tremolo()
 test_header()
+test_notes()
+test_voice()
+test_voices()
