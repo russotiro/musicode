@@ -4,7 +4,7 @@
 (part piano "Piano"
     (staff
         (expression "dolce") (tempo /4 = 120)
-        (notes (tremolo (grace slash (notes G3/16 A3/16 B3/16) C4/4) D4/4) E4/4 F4/4)
+        (notes (grace slash (notes G3/16 A3/16 B3/16) (tremolo 2 C4/4 D4/4)) E4/4 F4/4)
         (symbol segno)
         (notes C4/4 D4/4 E4/4 F4/4)
         (ending 1 (notes G4[trill]/4 A4[tremolo8]/4 B4/4 C5/4))

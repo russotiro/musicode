@@ -21,7 +21,72 @@ class Start(Node):
     
     def __init__(self, metadata, part_list=list()):
         self.metadata = metadata
-        self.part_list = part_list
+        self.part_list = part_list 
+    
+    def render_header(self):
+        metadata = self.metadata 
+        header = f'''\\header {{
+    title = "{metadata['title']}"
+    subtitle = "{metadata['subtitle']}"
+    composer = "{metadata['composer']}"
+}}
+'''
+        return header
+
+    def render_library(self):
+        return '''
+DSfine = {
+  \\once \\override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \\mark \\markup { \\small "D.S. al fine" }
+}
+
+DS = {
+  \\once \\override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \\mark \\markup { \\small "D.S." }
+}
+
+DCfine = {
+  \\once \\override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \\mark \\markup { \\small "D.C. al fine" }
+}
+
+DCcoda = {
+  \\once \\override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \\mark \\markup { \\small "D.C. al coda" }
+}
+
+DScoda = {
+  \\once \\override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \\mark \\markup { \\small "D.S. al coda" }
+}
+
+Fine = {
+  \\once \\override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \\mark \\markup { \\small \\italic "fine" }
+}
+
+GotoCoda = {
+  \\once \\override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \\mark \\markup { \\small "to Coda" \\small \\musicglyph #"scripts.coda" }
+}
+
+Coda = {
+  \\once \\override Score.RehearsalMark #'break-visibility = #'#(#f #t #t)
+  \\mark \\markup { \\small \\musicglyph #"scripts.coda" }
+}
+
+Segno = {
+  \\once \\override Score.RehearsalMark #'break-visibility = #'#(#f #t #t)
+  \\mark \\markup { \\small \\musicglyph #"scripts.segno" }
+}
+'''
+    
+    def render_parts(self):
+        # TODO: Implement rendering of parts 
+        return ''
+    
+    def render(self):
+        return self.render_header() + self.render_library() + self.render_parts() 
 
 class Tempo(Node):
     name = 'tempo'
