@@ -267,17 +267,15 @@ class MyTransformer(Transformer):
         return args[0].value
 
     def notes(self, args):
-        return ('notes', args)
+        return mc_ast.Notes(args)
 
     def voice(self, args):
-        # args[0] is a notes tuple
-        # remove 'notes' from args
-        return ('voice', args[0][1])
+        # args[0] is a notes instance
+        return mc_ast.Voice(args[0])
 
     def voices(self, args):
-        # args[0] is a list of voice tuples
-        # remove 'voice' from every arg
-        return ('voices', [v[1] for v in args])
+        # args[0] is a list of voice instances
+        return mc_ast.Voices(args)
 
     def note_environment(self, args):
         return args[0]
@@ -291,7 +289,7 @@ class MyTransformer(Transformer):
         if type(args[0]) == 'str':
             grace_type = args[0]
         
-        notes = args[-2][1]
+        notes = args[-2]
         final_note = args[-1]
 
         return mc_ast.Grace(grace_type, notes, final_note)
