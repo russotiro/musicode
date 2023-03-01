@@ -298,7 +298,7 @@ class MyTransformer(Transformer):
         return mc_ast.Tremolo(*args)
 
     def coda(self, args):
-        return ('coda', args)
+        return Coda(args)
 
     def ending(self, args):
         numbers = args[0].value

@@ -215,6 +215,21 @@ def test_voices():
 >> \\oneVoice
 """)
 
+
+def test_coda():
+    notes1 = mc_ast.Notes([note1, note2, note3, note4])
+    notes2 = mc_ast.Notes([note1, note2, note3, note3])
+    coda   = mc_ast.Coda([notes1, notes2])
+    assert_equal(coda.render(), "\\Coda { g'4 c'''2 a,,16 gis'4 } { g'4 c'''2 a,,16 a,,16 }")
+    
+
+def test_endings():
+    notes1 = mc_ast.Notes([note1, note2, note3, note4])
+    notes2 = mc_ast.Notes([note1, note2, note3, note3])
+    ending = mc_ast.Ending([6, 7, 9], [notes1, notes2])
+    assert_equal(ending.render(), "\\volta 6,7,9 { g'4 c'''2 a,,16 gis'4 } { g'4 c'''2 a,,16 a,,16 }")
+
+
 test_note()
 test_modifiers()
 test_rest()
@@ -233,3 +248,5 @@ test_header()
 test_notes()
 test_voice()
 test_voices()
+test_coda()
+test_endings()

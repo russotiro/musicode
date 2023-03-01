@@ -435,6 +435,12 @@ class Ending(Node):
         self.numbers = numbers
         self.content = content
 
+    def render(self):
+        result = "\\volta " + ','.join([str(n) for n in self.numbers])
+        for env in self.content:
+            result += " " + env.render()
+        return result
+
 
 class Part(Node):
     name = 'part'
@@ -443,3 +449,16 @@ class Part(Node):
         self.instrument = instr
         self.instrument_name = instr_name
         self.content = content
+
+
+class Coda(Node):
+    name = 'coda'
+
+    def __init__(self, envs):
+        self.staff_environments = envs
+
+    def render(self):
+        result = "\\Coda"
+        for env in self.staff_environments:
+            result += " " + env.render()
+        return result
