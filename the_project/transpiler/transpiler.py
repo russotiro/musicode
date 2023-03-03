@@ -313,8 +313,8 @@ def main():
     tree = parser.parse(musicode_file.read())
     result = MyTransformer().transform(tree)
 
-    print(result)
-    # print(result.render())
+    # print(result)
+    print(result.render())
 
 
 

@@ -1,0 +1,21 @@
+# -*-compilation-*-
+Processing `C:/Users/russo/Documents/School/CS 98 - Sr Capstone/musicode/the_project/transpiler/simple_example.ly'
+Parsing...
+C:/Users/russo/Documents/School/CS 98 - Sr Capstone/musicode/the_project/transpiler/simple_example.ly:1:1: warning: non-UTF-8 input
+
+ÿþ\
+C:/Users/russo/Documents/School/CS 98 - Sr Capstone/musicode/the_project/transpiler/simple_example.ly:1:2: warning: non-UTF-8 input
+ÿ
+ þ\
+C:/Users/russo/Documents/School/CS 98 - Sr Capstone/musicode/the_project/transpiler/simple_example.ly:1:3: error: undefined character or shorthand: \
+ÿþ
+  \
+C:/Users/russo/Documents/School/CS 98 - Sr Capstone/musicode/the_project/transpiler/simple_example.ly:1:3: error: syntax error, unexpected STRING, expecting '.' or '='
+ÿþ
+  \
+C:/Users/russo/Documents/School/CS 98 - Sr Capstone/musicode/the_project/transpiler/simple_example.ly:1: warning: no \version statement found, please add
+
+\version "2.22.2"
+
+for future compatibility
+fatal error: failed files: "C:\\Users\\russo\\Documents\\School\\CS 98 - Sr Capstone\\musicode\\the_project\\transpiler\\simple_example.ly"

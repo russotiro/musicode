@@ -27,9 +27,9 @@ class Start(Node):
     def render_header(self):
         metadata = self.metadata 
         header = f'''\\header {{
-    title = "{metadata['title']}"
-    subtitle = "{metadata['subtitle']}"
-    composer = "{metadata['composer']}"
+    title = "{metadata['title'] if 'title' in metadata else ""}"
+    subtitle = "{metadata['subtitle'] if 'subtitle' in metadata else ""}"
+    composer = "{metadata['composer'] if 'composer' in metadata else ""}"
 }}
 '''
         return header
@@ -84,10 +84,11 @@ Segno = {
 '''
     
     def render_parts(self):
-        return '\n'.join([part.render() for part in self.part_list])
+        return '<<\n' + '\n'.join([part.render() for part in self.part_list]) + '\n>>'
     
     def render(self):
-        return self.render_header() + self.render_library() + self.render_parts() 
+        result = '\\version "2.23.0"\n'
+        return result + self.render_header() + self.render_library() + self.render_parts() 
 
 class Tempo(Node):
     name = 'tempo'
@@ -96,8 +97,25 @@ class Tempo(Node):
         self.tempo_text = tempo_text
         self.tempo_number = tempo_number
 
+    def extract_tempo_number(self):
+        if self.tempo_number == []:
+            return ""
+        else:
+            return f'{self.tempo_number[0]} = {self.tempo_number[1]}'
+
     def render(self):
-        return ("\\tempo \"%s\" %s" % (self.tempo_text, self.tempo_number))
+        result = "\\tempo "
+        lily_tempo_text = f'"{self.tempo_text}"'
+        lily_tempo_number = self.extract_tempo_number()
+
+        if self.tempo_number == []:
+            result += lily_tempo_text
+        elif self.tempo_text == "":
+            result += lily_tempo_number
+        else:
+            result += lily_tempo_text + " " + lily_tempo_number
+
+        return result
 
 
 class Barline(Node):
@@ -336,7 +354,7 @@ class Grace(Node):
             result += "\\grace"
         else:
             sys.stderr.write("Grace type must be slash or noSlash.\n")
-        result += " { " + ' '.join([arg.render() for arg in self.notes]) + " } "
+        result += self.notes.render()
 
         return result + self.final_note.render()
 
@@ -436,10 +454,10 @@ class Ending(Node):
         self.content = content
 
     def render(self):
-        result = "\\volta " + ','.join([str(n) for n in self.numbers])
+        result = "\\volta " + ','.join([str(n) for n in self.numbers]) + " { "
         for env in self.content:
             result += " " + env.render()
-        return result
+        return result + " }\n"
 
 
 class Part(Node):

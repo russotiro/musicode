@@ -135,12 +135,12 @@ def test_barline():
 
 
 def test_tempo():
-    text = mc_ast.Tempo('asiago', '4 = 120').render()
+    text = mc_ast.Tempo('asiago', ['4', '120']).render()
     assert_equal(text, '\\tempo "asiago" 4 = 120')
-    text = mc_ast.Tempo('', '4 = 120').render()
-    assert_equal(text, '\\tempo "" 4 = 120')
-    text = mc_ast.Tempo('asiago', '').render()
-    assert_equal(text, '\\tempo "asiago" ')
+    text = mc_ast.Tempo('', ['4', '120']).render()
+    assert_equal(text, '\\tempo 4 = 120')
+    text = mc_ast.Tempo('asiago', []).render()
+    assert_equal(text, '\\tempo "asiago"')
 
 clef1 = mc_ast.Clef('bass')
 
@@ -227,7 +227,7 @@ def test_endings():
     notes1 = mc_ast.Notes([note1, note2, note3, note4])
     notes2 = mc_ast.Notes([note1, note2, note3, note3])
     ending = mc_ast.Ending([6, 7, 9], [notes1, notes2])
-    assert_equal(ending.render(), "\\volta 6,7,9 { g'4 c'''2 a,,16 gis'4 } { g'4 c'''2 a,,16 a,,16 }")
+    assert_equal(ending.render(), "\\volta 6,7,9 {  { g'4 c'''2 a,,16 gis'4 } { g'4 c'''2 a,,16 a,,16 } }\n")
 
 
 def test_staffs():
