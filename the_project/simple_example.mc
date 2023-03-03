@@ -1,9 +1,8 @@
 (title "My Title")
 (subtitle "My Subtitle")
 (composer "Me")
-(instruments flute clarinet piano)
 
-(part flute "Flute"
+(part "Flute"
     (staff (tempo "Allegro non troppo" /4 = 120)
         (notes (clef treble) (time 4/4) (key C) (expression "dolce")
             C4[staccato tenuto mf beamEnd stemUp]/4 D4.[stemUp]^/4 E4/4 F4/4
@@ -19,9 +18,9 @@
     )
 )
 
-(part clarinet "Clarinet"
+(part "Clarinet"
     (staff (notes G4/4)))
 
-(part piano "Piano"
+(part "Piano"
     (staff (notes C4_G4/4))
     (staff (notes E3/4)))

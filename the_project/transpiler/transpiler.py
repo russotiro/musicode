@@ -100,18 +100,11 @@ class MyTransformer(Transformer):
         self.metadata['composer'] = composer
         return ('composer', composer)
 
-    def instruments(self, args):
-        self.metadata['instruments'] = args
-        return ('instruments', args)
-
-    def instrument(self, args):
-        return args[0].value
-
     def tempo(self, args):
         tempo_text, tempo_number = self.__determine_tempo_info(args)
         tempo = mc_ast.Tempo(tempo_text, tempo_number)
 
-        return ('tempo', tempo)
+        return tempo
 
     def tempo_text(self, args):
         return self.__concatenate_words(args[1:-1])
@@ -125,7 +118,7 @@ class MyTransformer(Transformer):
         return self.__concatenate_words(args)
 
     def part(self, args):
-        part = mc_ast.Part(args[0], args[1], args[2:])
+        part = mc_ast.Part(args[0], args[1:])
         self.part_list.append(part)
         return part
 
@@ -211,16 +204,16 @@ class MyTransformer(Transformer):
     # staff events
 
     def clef(self, args):
-        return ('clef', mc_ast.Clef(args[0].value))
+        return mc_ast.Clef(args[0].value)
 
     def key(self, args):
-        return ('key', mc_ast.Key(args[0].value))
+        return mc_ast.Key(args[0].value)
 
     def time(self, args):
         if len(args) == 1:
-            return ('time', mc_ast.Time(args[0].value))
+            return mc_ast.Time(args[0].value)
         elif len(args) == 2:
-            return ('time', mc_ast.Time([args[0].value, args[1]]))
+            return mc_ast.Time([args[0].value, args[1]])
         else:
             sys.stderr.write("something went wrong in time\n")
 
@@ -298,18 +291,14 @@ class MyTransformer(Transformer):
         return mc_ast.Tremolo(*args)
 
     def coda(self, args):
-        return Coda(args)
+        return mc_ast.Coda(args)
 
     def ending(self, args):
         numbers = args[0].value
         return mc_ast.Ending(self.__parse_ending_numbers(numbers), args[1:])
 
     def staff(self, args):
-        return ('staff', args)
-
-
-# def render_lily(abstract_tree):
-#     note = mc_ast.Note("G", 4, , 4)
+        return mc_ast.Staff(args)
 
 
 def main():
@@ -325,8 +314,8 @@ def main():
     result = MyTransformer().transform(tree)
 
     print(result)
+    # print(result.render())
 
-    # render_lily(result)
 
 
 if __name__ == '__main__':

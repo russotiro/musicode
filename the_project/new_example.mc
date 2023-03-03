@@ -1,7 +1,6 @@
 (title "whats up")
-(instruments piano)
 
-(part piano "Piano"
+(part "Piano"
     (staff
         (expression "dolce") (tempo /4 = 120)
         (notes (grace slash (notes G3/16 A3/16 B3/16) (tremolo 2 C4/4 D4/4)) E4/4 F4/4)

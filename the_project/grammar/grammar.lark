@@ -4,17 +4,14 @@ _LPAREN: "("
 _RPAREN: ")"
 _LBRACKET: "["
 _RBRACKET: "]"
-statement: _LPAREN (title | subtitle | composer | instruments | part) _RPAREN
+statement: _LPAREN (title | subtitle | composer | part) _RPAREN
 
 title: "title" "\"" WORD+ "\""
 subtitle: "subtitle" "\"" WORD+ "\""
 composer: "composer" "\"" WORD+ "\""
 
-instruments: "instruments" instrument+
-
 // part construction
-part: "part" instrument instrument_name staff+
-instrument: WORD
+part: "part" instrument_name staff+
 instrument_name: "\"" WORD+ "\""
 staff: _LPAREN "staff" staff_environment+ _RPAREN
 

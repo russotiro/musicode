@@ -1,9 +1,8 @@
 ( title "My Title")
 ( subtitle "Jingle Bells")
 (composer "Me")
-(instruments flute clarinet)
 
-(part flute "Flute"
+(part "Flute"
     (staff
         (notes (clef treble) (time common) (key C) (tempo "Allegro non troppo" /4 = 120)
             E4[staccato stemDown pianoFinger1]/4 E4.^/4 (key Cbm) r/2 E4[phrasingSlurBegin]/4 D4[slurBegin]/4 C4_E4_G4[staccato marcato stemUp ff slurEnd]/2 E4[phrasingSlurEnd]/4 G4/4 C4/4. D4/8 E4/1)
@@ -17,6 +16,6 @@
 
         (ending 3,1,7 (notes F4/4 F4/4 F4/4. F4/8) (notes F4/2 F4/2 F4/2. F4/4))))
 
-(part clarinet "Clarinet"
+(part "Clarinet"
     (staff (notes (clef treble) (time common) (key D)
-        C4/4 C4/4 D4/4 E4/4 (barline double) E4/4 D4/4 C4/4 B4/4)))
+        C4/4 C4/4 D4/4 E4/4 (barline double) E4/4 D4/4 C4/4 B4/4) (coda (notes G4/4))))

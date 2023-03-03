@@ -2,10 +2,11 @@
 An intermediate representation of MusiCode code.
 '''
 
-import modifier_dictionary
+import databases
 import sys
 
-mc_to_lily_modifiers = modifier_dictionary.mc_to_lily_modifiers
+mc_to_lily_modifiers = databases.mc_to_lily_modifiers
+instr_to_short_instr = databases.instr_to_short_instr
 
 
 class Node:
@@ -79,11 +80,11 @@ Segno = {
   \\once \\override Score.RehearsalMark #'break-visibility = #'#(#f #t #t)
   \\mark \\markup { \\small \\musicglyph #"scripts.segno" }
 }
+
 '''
     
     def render_parts(self):
-        # TODO: Implement rendering of parts 
-        return ''
+        return '\n'.join([part.render() for part in self.part_list])
     
     def render(self):
         return self.render_header() + self.render_library() + self.render_parts() 
@@ -292,7 +293,7 @@ class Text(Node):
             'd.c. al coda': '\\DCcoda',
             'd.s. al fine': '\\DSfine',
             'd.s. al coda': '\\DScoda',
-            'toCoda': '\\GotoCoda'
+            'tocoda': '\\GotoCoda'
         }
     
     def render(self):
@@ -388,14 +389,13 @@ class Tremolo(Node):
 class Notes(Node):
     name = 'notes'
 
-    def __init__(self, notes):
-        self.notes = notes 
+    def __init__(self, notes_args):
+        self.notes_args = notes_args
     
     def render_notes(self):
-        return ' '.join([arg.render() for arg in self.notes])
+        return ' '.join([arg.render() for arg in self.notes_args])
     
     def render(self):
-        print(self.notes)
         return '{ ' + self.render_notes() + ' }'
 
 class Voice(Node):
@@ -445,11 +445,69 @@ class Ending(Node):
 class Part(Node):
     name = 'part'
 
-    def __init__(self, instr, instr_name, content):
-        self.instrument = instr
+    def __init__(self, instr_name, staffs):
         self.instrument_name = instr_name
-        self.content = content
+        self.staffs = staffs
 
+    def short_instr(self):
+        if self.instrument_name in instr_to_short_instr:
+            return instr_to_short_instr[self.instrument_name]
+        elif len(self.instrument_name) <= 4:
+            return self.instrument_name
+        elif ' ' in self.instrument_name:
+            words = self.instrument_name.split()
+            result = ""
+            for word in words:
+                result += word[0] + ". "
+            return result[:-1]
+        else:
+            return self.instrument_name[0:3] + '.'
+
+    def render_instr_names(self):
+        result  = '    instrumentName = "' + self.instrument_name + ' "\n'
+        result += '    shortInstrumentName = "' + self.short_instr() + ' "\n'
+        return result
+
+    def render_staffs(self):
+        result = ""
+        for staff in self.staffs:
+            result += '    \\new Staff {\n        ' + staff.render() + '\n}\n'
+        return result
+
+    def render(self):
+        if len(self.staffs) == 1:
+            result =  '\\new Staff \\with {\n'
+            result += self.render_instr_names()
+            result += '} {\n    '
+            result += self.staffs[0].render()
+            result += '\n}'
+            return result
+
+        elif self.instrument_name in databases.grand_staffs:
+            result =  '\\new PianoStaff \\with {\n'
+            result += self.render_instr_names()
+            result += '} <<\n'
+            result += self.render_staffs()
+            result += '>>\n'
+            return result
+
+        else: # non-grand-staff multi-staff parts
+            result  = '\\new StaffGroup \\with {\n'
+            result += self.render_instr_names()
+            result += '} { <<\n\\set StaffGroup.systemStartDelimiter = #\'SystemStartSquare\n'
+            result += self.render_staffs()
+            result += '>> }\n'
+            return result
+
+
+class Staff(Node):
+    name = 'staff'
+
+    def __init__(self, staff_environments):
+        self.staff_environments = staff_environments
+
+    def render(self):
+        return '\n'.join(staff_env.render() for staff_env in self.staff_environments)
 
 class Coda(Node):
     name = 'coda'

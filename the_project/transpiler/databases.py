@@ -62,3 +62,52 @@ mc_to_lily_modifiers = {
     "beamStemRightCount4" : "\n\\set stemRightBeamCount = #4\n",
     "beamStemRightCount5" : "\n\\set stemRightBeamCount = #5\n"
 }
+
+instr_to_short_instr = {
+    "Piccolo" : "Picc.",
+    "Flute" : "Fl.",
+    "Oboe" : "Ob.",
+    "English Horn" : "E. H.",
+    "Clarinet" : "Cl.",
+    "Bass Clarinet" : "B. Cl.",
+    "Bassoon" : "Bsn.",
+    "Double Bassoon" : "D. Bsn.",
+    "Contrabassoon" : "C. bsn.",
+    "Horn" : "Hn.",
+    "French Horn" : "Hn.",
+    "Cornet" : "Cor.",
+    "Trumpet" : "Tpt.",
+    "Trombone" : "Tbn.",
+    "Tuba" : "Tb.",
+    "Triangle" : "Trgl.",
+    "Cymbals" : "Cym.",
+    "Bass drum" : "B. d.",
+    "Snare drum" : "S. d.",
+    "Tambourine" : "Tamb.",
+    "Castanets" : "Cast.",
+    "Gong" : "Gng.",
+    "Tubular bells" : "T. b.",
+    "Chimes" : "T. b.",
+    "Glockenspiel" : "Glock.",
+    "Xylophone" : "Xyl.",
+    "Celesta" : "Cel.",
+    "Piano" : "Pno.",
+    "Harp" : "Hp.",
+    "Violin" : "Vln.",
+    "Viola" : "Vla.",
+    "Violoncello" : "Vc.",
+    "Cello" : "Vc.",
+    "Double bass" : "D. B.",
+    "Guitar" : "Gui."
+}
+
+grand_staffs = [
+    "Piano",
+    "Electric Piano",
+    "Keyboard",
+    "Harp",
+    "Harpsichord",
+    "Accordion",
+    "Celesta",
+    "Organ"
+]

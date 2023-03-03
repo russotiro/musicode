@@ -107,7 +107,7 @@ def test_text():
     assert_equal(text, '\\DCcoda')
     text = mc_ast.Text('road_map', 'd.s. al coda').render()
     assert_equal(text, '\\DScoda')
-    text = mc_ast.Text('road_map', 'toCoda').render()
+    text = mc_ast.Text('road_map', 'tocoda').render()
     assert_equal(text, '\\GotoCoda')
 
     # Test expression text 
@@ -142,10 +142,10 @@ def test_tempo():
     text = mc_ast.Tempo('asiago', '').render()
     assert_equal(text, '\\tempo "asiago" ')
 
+clef1 = mc_ast.Clef('bass')
 
 def test_clef():
-    clef = mc_ast.Clef('bass').render()
-    assert_equal(clef, "\\clef bass")
+    assert_equal(clef1.render(), "\\clef bass")
     clef = mc_ast.Clef('alto').render()
     assert_equal(clef, "\\clef alto")
 
@@ -230,6 +230,24 @@ def test_endings():
     assert_equal(ending.render(), "\\volta 6,7,9 { g'4 c'''2 a,,16 gis'4 } { g'4 c'''2 a,,16 a,,16 }")
 
 
+def test_staffs():
+    staff = mc_ast.Staff([mc_ast.Notes([note1, note2, clef1, note3]), mc_ast.Coda([mc_ast.Notes([note1])])])
+    assert_equal(staff.render(), "{ g'4 c'''2 \\clef bass a,,16 }\n\\Coda { g'4 }")
+
+
+def test_parts():
+    staff = mc_ast.Staff([mc_ast.Notes([note1, note2, clef1, note3]), mc_ast.Coda([mc_ast.Notes([note1])])])
+    flute = mc_ast.Part("Flute", [staff]).render()
+    assert_equal(flute, '\\new Staff \\with {\n    instrumentName = "Flute "\n    shortInstrumentName = "Fl. "\n} {\n    ' + staff.render() + '\n}')
+
+    piano = mc_ast.Part("Piano", [staff, staff]).render()
+    assert_equal(piano, '\\new PianoStaff \\with {\n    instrumentName = "Piano "\n    shortInstrumentName = "Pno. "\n} <<\n    \\new Staff {\n        ' + staff.render() + '\n}\n    \\new Staff {\n        ' + staff.render() + '\n}\n>>\n')
+
+    cello = mc_ast.Part("Cello", [staff, staff]).render()
+    the_string = '\\new StaffGroup \\with {\n    instrumentName = "Cello "\n    shortInstrumentName = "Vc. "\n} { <<\n\\set StaffGroup.systemStartDelimiter = #\'SystemStartSquare\n    \\new Staff {\n        ' + staff.render() + '\n}\n    \\new Staff {\n        ' + staff.render() + '\n}\n>> }\n'
+    assert_equal(cello, the_string)
+
+
 test_note()
 test_modifiers()
 test_rest()
@@ -250,3 +268,5 @@ test_voice()
 test_voices()
 test_coda()
 test_endings()
+test_staffs()
+test_parts()
