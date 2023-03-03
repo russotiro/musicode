@@ -116,7 +116,7 @@ def test_text():
 
     # Test technique text 
     text = mc_ast.Text('technique', 'straight mute').render() 
-    assert_equal(text, '\\mark "straight mute"')
+    assert_equal(text, '\\mark \\markup \\small "straight mute"')
 
 
 def test_barline():
@@ -174,9 +174,9 @@ def test_tuplet_basic():
 
 
 def test_grace_basic():
-    grace = mc_ast.Grace("noSlash", [note1, note2], note3).render()
+    grace = mc_ast.Grace("noSlash", mc_ast.Notes([note1, note2]), note3).render()
     assert_equal(grace, "\\grace { g'4 c'''2 } a,,16")
-    grace = mc_ast.Grace("slash", [note1, note2], note3).render()
+    grace = mc_ast.Grace("slash", mc_ast.Notes([note1, note2]), note3).render()
     assert_equal(grace, "\\slashedGrace { g'4 c'''2 } a,,16")
 
 

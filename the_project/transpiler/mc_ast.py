@@ -321,7 +321,7 @@ class Text(Node):
         elif self.type == 'expression':
             return f'\\tweak direction #DOWN \\mark \\markup {{ \\small \\italic "{self.contents}" }}'
         elif self.type == 'technique':
-            return f'\\mark "{self.contents}"'
+            return f'\\mark \\markup \\small "{self.contents}"'
         else:
             sys.stderr.write('Tried to render Text of invalid type.\n')
 
@@ -349,12 +349,12 @@ class Grace(Node):
     def render(self):
         result = ""
         if self.grace_type == "slash":
-            result += "\\slashedGrace"
+            result += "\\slashedGrace "
         elif self.grace_type == "noSlash":
-            result += "\\grace"
+            result += "\\grace "
         else:
             sys.stderr.write("Grace type must be slash or noSlash.\n")
-        result += self.notes.render()
+        result += self.notes.render() + ' '
 
         return result + self.final_note.render()
 
