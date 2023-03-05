@@ -5,8 +5,9 @@ An intermediate representation of MusiCode code.
 import databases
 import sys
 
-mc_to_lily_modifiers = databases.mc_to_lily_modifiers
-instr_to_short_instr = databases.instr_to_short_instr
+MC_TO_LILY_MODIFIERS_PRE = databases.mc_to_lily_pre_note_modifiers 
+MC_TO_LILY_MODIFIERS_POST = databases.mc_to_lily_post_note_modifiers
+INSTR_TO_SHORT_INSTR = databases.instr_to_short_instr
 
 
 class Node:
@@ -197,7 +198,7 @@ class Note(Node):
 
     def render(self):
         lily = self.render_pitch_octave() + self.duration
-        return lily + self.modifiers.render()
+        return self.modifiers.render_pre_event() + lily + self.modifiers.render_post_event()
 
     def lily_octave(self, octave):
         octave = int(octave)
@@ -242,7 +243,8 @@ class Rest(Node):
     
     def render(self):
         lily = "r" + self.duration 
-        return lily + Modifiers(self.beaming).render()
+        modifiers = Modifiers(self.beaming)
+        return modifiers.render_pre_event() + lily + modifiers.render_post_event()
 
 
 class Chord(Node):
@@ -265,21 +267,30 @@ class Chord(Node):
             lily += note.render_pitch_octave()
         lily += ">"
         lily += self.duration 
-        return lily + self.modifiers.render()
+        return self.modifiers.render_pre_event() + lily + self.modifiers.render_post_event()
 
 
 class Modifiers(Node):
     name = 'modifiers'
-    # TODO: Decide if it makes more sense to group modifiers 
-    # (i.e. put articulation modifiers together, dynamic modifiers together, etc.)
+
     def __init__(self, modifiers):
         self.modifiers = modifiers
-
-    def render(self):
+    
+    def render_pre_event(self):
         lily_modifier_list = list()
         for modifier in self.modifiers:
-            if modifier in mc_to_lily_modifiers:
-                lily_modifier_list.append(mc_to_lily_modifiers[modifier])
+            if modifier in MC_TO_LILY_MODIFIERS_PRE:
+                lily_modifier_list.append(MC_TO_LILY_MODIFIERS_PRE[modifier])
+            # Omit modifier if not in dictionary 
+        if lily_modifier_list == []:
+            return ''
+        return ' '.join(lily_modifier_list) + ' '
+
+    def render_post_event(self):
+        lily_modifier_list = list()
+        for modifier in self.modifiers:
+            if modifier in MC_TO_LILY_MODIFIERS_POST:
+                lily_modifier_list.append(MC_TO_LILY_MODIFIERS_POST[modifier])
             else:
                 # Assume modifier is just prepended by a backslash if not in dictionary 
                 lily_modifier_list.append("\\" + modifier)
@@ -468,8 +479,8 @@ class Part(Node):
         self.staffs = staffs
 
     def short_instr(self):
-        if self.instrument_name in instr_to_short_instr:
-            return instr_to_short_instr[self.instrument_name]
+        if self.instrument_name in INSTR_TO_SHORT_INSTR:
+            return INSTR_TO_SHORT_INSTR[self.instrument_name]
         elif len(self.instrument_name) <= 4:
             return self.instrument_name
         elif ' ' in self.instrument_name:

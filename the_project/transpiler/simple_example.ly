@@ -57,7 +57,7 @@ Segno = {
 } {
     \tempo "Allegro non troppo" 4 = 120
 { \clef treble \numericTimeSignature
-\time 4/4 \key c \major \tweak direction #DOWN \mark \markup { \small \italic "dolce" } c'4\staccato \tenuto \mf \stemUp d'4\staccato \marcato \stemUp e'4 f'4 \defaultTimeSignature
+\time 4/4 \key c \major \tweak direction #DOWN \mark \markup { \small \italic "dolce" } \stemUp c'4\staccato \tenuto \mf \stemNeutral \stemUp d'4\staccato \marcato \stemNeutral e'4 f'4 \defaultTimeSignature
 \time 4/4 r4 r8 g'8[ r8] r8 r4 \tuplet 3/2 { r4 g'4 g'4 } c'4 c'4 \bar "|." \Segno \DScoda \GotoCoda \DCfine }
 }
 \new Staff \with {

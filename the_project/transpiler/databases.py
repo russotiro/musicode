@@ -1,4 +1,21 @@
-mc_to_lily_modifiers = {
+mc_to_lily_pre_note_modifiers = {
+    "stemUp" : "\\stemUp",
+    "stemDown" : "\\stemDown",
+    "beamStemLeftCount0" : "\n\\set stemLeftBeamCount = #0\n",
+    "beamStemLeftCount1" : "\n\\set stemLeftBeamCount = #1\n",
+    "beamStemLeftCount2" : "\n\\set stemLeftBeamCount = #2\n",
+    "beamStemLeftCount3" : "\n\\set stemLeftBeamCount = #3\n",
+    "beamStemLeftCount4" : "\n\\set stemLeftBeamCount = #4\n",
+    "beamStemLeftCount5" : "\n\\set stemLeftBeamCount = #5\n",
+    "beamStemRightCount0" : "\n\\set stemRightBeamCount = #0\n",
+    "beamStemRightCount1" : "\n\\set stemRightBeamCount = #1\n",
+    "beamStemRightCount2" : "\n\\set stemRightBeamCount = #2\n",
+    "beamStemRightCount3" : "\n\\set stemRightBeamCount = #3\n",
+    "beamStemRightCount4" : "\n\\set stemRightBeamCount = #4\n",
+    "beamStemRightCount5" : "\n\\set stemRightBeamCount = #5\n"
+}
+
+mc_to_lily_post_note_modifiers = {
     "tie" : "~",
     "gliss" : "\\glissando",
     "slurBegin" : "(",
@@ -49,18 +66,24 @@ mc_to_lily_modifiers = {
     "beamBeginUp" : "^[",
     "beamBeginDown" : "_[",
     "beamEnd" : "]",
-    "beamStemLeftCount0" : "\n\\set stemLeftBeamCount = #0\n",
-    "beamStemLeftCount1" : "\n\\set stemLeftBeamCount = #1\n",
-    "beamStemLeftCount2" : "\n\\set stemLeftBeamCount = #2\n",
-    "beamStemLeftCount3" : "\n\\set stemLeftBeamCount = #3\n",
-    "beamStemLeftCount4" : "\n\\set stemLeftBeamCount = #4\n",
-    "beamStemLeftCount5" : "\n\\set stemLeftBeamCount = #5\n",
-    "beamStemRightCount0" : "\n\\set stemRightBeamCount = #0\n",
-    "beamStemRightCount1" : "\n\\set stemRightBeamCount = #1\n",
-    "beamStemRightCount2" : "\n\\set stemRightBeamCount = #2\n",
-    "beamStemRightCount3" : "\n\\set stemRightBeamCount = #3\n",
-    "beamStemRightCount4" : "\n\\set stemRightBeamCount = #4\n",
-    "beamStemRightCount5" : "\n\\set stemRightBeamCount = #5\n"
+
+    # Empty strings because these are taken care of BEFORE the note
+    "beamStemLeftCount0" : "",
+    "beamStemLeftCount1" : "",
+    "beamStemLeftCount2" : "",
+    "beamStemLeftCount3" : "",
+    "beamStemLeftCount4" : "",
+    "beamStemLeftCount5" : "",
+    "beamStemRightCount0" : "",
+    "beamStemRightCount1" : "",
+    "beamStemRightCount2" : "",
+    "beamStemRightCount3" : "",
+    "beamStemRightCount4" : "",
+    "beamStemRightCount5" : "",
+
+    # Stem neutral to reset stemming environment after the note 
+    "stemUp" : "\\stemNeutral",
+    "stemDown" : "\\stemNeutral"
 }
 
 instr_to_short_instr = {

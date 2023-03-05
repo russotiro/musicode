@@ -57,7 +57,7 @@ def test_note():
 
 def test_modifiers():
     note = mc_ast.Note("G", "4", mc_ast.Modifiers(["stemUp", "accent", "beamNone"]), "4").render()
-    assert_equal(note, "g'4\\stemUp \\accent \\noBeam")
+    assert_equal(note, "\\stemUp g'4\\stemNeutral \\accent \\noBeam")
     note = mc_ast.Note("C", "6", mc_ast.Modifiers(["beamBeginUp", "ff"]), "2").render()
     assert_equal(note, "c'''2^[ \\ff")
     note = mc_ast.Note("A", "1", mc_ast.Modifiers(["tremolo16", "crescTextBegin"]), "16").render()
@@ -65,7 +65,7 @@ def test_modifiers():
     note = mc_ast.Note("A", "3", mc_ast.Modifiers(["beamEnd", "crescendoTextEnd"]), "32").render()
     assert_equal(note, "a32] \\!")
     note = mc_ast.Note("G", "4", mc_ast.Modifiers(["beamStemLeftCount4"]), "4").render()
-    assert_equal(note, "g'4\n\\set stemLeftBeamCount = #4\n")
+    assert_equal(note, "\n\\set stemLeftBeamCount = #4\n g'4")
     note = mc_ast.Note("C", "6", mc_ast.Modifiers(["pedalBegin"]), "2").render()
     assert_equal(note, "c'''2\\sustainOn")
     note = mc_ast.Note("A", "1", mc_ast.Modifiers(["pedalLift"]), "16").render()
