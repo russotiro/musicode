@@ -278,6 +278,15 @@ class Modifiers(Node):
     def __init__(self, modifiers):
         self.modifiers = modifiers
     
+    def __check_no_duplicate_numbers(self, modifiers, modifier_order):
+        # Assumes that 'modifiers' has ALREADY been sorted using 'modifier_order'
+        for i in range(len(modifiers) - 1):
+            curr_modifier = modifiers[i]
+            next_modifier = modifiers[i + 1]
+            if modifier_order[curr_modifier] == modifier_order[next_modifier]:
+                sys.stderr.write(f'ERROR: Cannot apply both "{curr_modifier}" and "{next_modifier}" to '
+                                  'the same note, rest, or chord.\n')
+    
     def __sort_pre_modifiers(self):
         # Extract only modifiers that should appear before the event 
         pre_modifiers = filter(lambda modifier : modifier in MC_TO_LILY_MODIFIERS_PRE, self.modifiers)
@@ -285,12 +294,20 @@ class Modifiers(Node):
 
         pre_modifiers.sort(key=lambda modifier : PRE_MODIFIER_ORDER[modifier])
 
+        # Check that event does not contain modifiers that would result in an error thrown in LilyPond, 
+        # e.g. no beamBegin and beamEnd on the same note 
+        self.__check_no_duplicate_numbers(pre_modifiers, PRE_MODIFIER_ORDER)
+
         return pre_modifiers 
     
     def __sort_post_modifiers(self):
         post_modifiers = self.modifiers.copy() 
 
         post_modifiers.sort(key=lambda modifier : POST_MODIFIER_ORDER[modifier])
+
+        # Check that event does not contain modifiers that would result in an error thrown in LilyPond, 
+        # e.g. no beamBegin and beamEnd on the same note 
+        self.__check_no_duplicate_numbers(post_modifiers, POST_MODIFIER_ORDER)
 
         return post_modifiers 
     

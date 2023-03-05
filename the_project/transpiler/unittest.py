@@ -71,7 +71,7 @@ def test_modifiers_sort():
                                   "pianoFinger5", "pianoFinger1", "beamStemLeftCount0", "beamStemLeftCount1", "phrasingSlurBegin", "slurBegin",
                                   "marcato", "accent", "phrasingSlurEnd", "beamStemLeftCount5", "beamStemRightCount4", "staccato", 
                                   "beamStemRightCount0", "beamStemRightCount2", "beamStemRightCount1"]).render_post_event()
-    assert_equal(modifiers, "\\noBeam [             \\staccato \\marcato \\tenuto \\accent \\fermata ~ \\glissando \) ) \( ( :8 \\trill "
+    assert_equal(modifiers, "\\noBeam [             \\staccato \\tenuto \\accent \\marcato \\fermata ~ \\glissando \) ) \( ( :8 \\trill "
                             "\\sustainOn -1 -2 -3 -4 -5 \\ppp \! \< \\stemNeutral")
 
 def test_modifiers():
