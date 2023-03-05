@@ -54,10 +54,29 @@ def test_note():
     note = mc_ast.Note("C", "6", mc_ast.Modifiers([]), "2.").render()
     assert_equal(note, "c'''2.")
 
+def test_modifiers_sort():
+    modifiers = mc_ast.Modifiers(["beamStemLeftCount5", "beamStemRightCount5", "beamStemRightCount4", "stemUp", "staccato",
+                                  "beamStemLeftCount3", "beamStemRightCount0", "beamStemLeftCount4", "beamStemLeftCount1",
+                                  "beamStemLeftCount0", "beamStemRightCount1", "stemDown", "beamStemLeftCount2",
+                                  "beamStemRightCount2", "beamStemRightCount3", "ppp"]).render_pre_event()
+    assert_equal(modifiers, "\\stemUp \\stemDown \n\\set stemLeftBeamCount = #0\n \n\\set stemLeftBeamCount = #1\n "
+                            "\n\\set stemLeftBeamCount = #2\n \n\\set stemLeftBeamCount = #3\n \n\\set stemLeftBeamCount = #4\n "
+                            "\n\\set stemLeftBeamCount = #5\n \n\\set stemRightBeamCount = #0\n \n\\set stemRightBeamCount = #1\n "
+                            "\n\\set stemRightBeamCount = #2\n \n\\set stemRightBeamCount = #3\n \n\\set stemRightBeamCount = #4\n "
+                            "\n\\set stemRightBeamCount = #5\n ")
+    
+    modifiers = mc_ast.Modifiers(["fermata", "trill", "crescEnd", "gliss", "beamStemLeftCount3", "beamStemRightCount5", "pianoFinger3",
+                                  "ppp", "crescBegin", "beamNone", "tie", "beamStemRightCount3", "slurEnd", "stemUp", "beamStemLeftCount4",
+                                  "pianoFinger2", "pianoFinger4", "beamBegin", "tenuto", "pedalBegin", "tremolo8", "beamStemLeftCount2",
+                                  "pianoFinger5", "pianoFinger1", "beamStemLeftCount0", "beamStemLeftCount1", "phrasingSlurBegin", "slurBegin",
+                                  "marcato", "accent", "phrasingSlurEnd", "beamStemLeftCount5", "beamStemRightCount4", "staccato", 
+                                  "beamStemRightCount0", "beamStemRightCount2", "beamStemRightCount1"]).render_post_event()
+    assert_equal(modifiers, "\\noBeam [             \\staccato \\marcato \\tenuto \\accent \\fermata ~ \\glissando \) ) \( ( :8 \\trill "
+                            "\\sustainOn -1 -2 -3 -4 -5 \\ppp \! \< \\stemNeutral")
 
 def test_modifiers():
     note = mc_ast.Note("G", "4", mc_ast.Modifiers(["stemUp", "accent", "beamNone"]), "4").render()
-    assert_equal(note, "\\stemUp g'4\\stemNeutral \\accent \\noBeam")
+    assert_equal(note, "\\stemUp g'4\\noBeam \\accent \\stemNeutral")
     note = mc_ast.Note("C", "6", mc_ast.Modifiers(["beamBeginUp", "ff"]), "2").render()
     assert_equal(note, "c'''2^[ \\ff")
     note = mc_ast.Note("A", "1", mc_ast.Modifiers(["tremolo16", "crescTextBegin"]), "16").render()
@@ -91,7 +110,7 @@ def test_chord():
     chord = mc_ast.Chord([mc_ast.Note("C", "4"), mc_ast.Note("E", "4"), mc_ast.Note("G", "4")], mc_ast.Modifiers([]), "4").render()
     assert_equal(chord, "<c'e'g'>4")
     chord = mc_ast.Chord([mc_ast.Note("D", "4"), mc_ast.Note("F#", "4"), mc_ast.Note("A", "4")], mc_ast.Modifiers(["staccato", "ff", "marcato", "tremolo32", "beamNone"]), "4.").render()
-    assert_equal(chord, "<d'fis'a'>4.\\staccato \\ff \\marcato :32 \\noBeam")
+    assert_equal(chord, "<d'fis'a'>4.\\noBeam \\staccato \\marcato :32 \\ff")
 
 def test_symbol():
     segno = mc_ast.Symbol('segno').render()
@@ -249,6 +268,7 @@ def test_parts():
 
 
 test_note()
+test_modifiers_sort()
 test_modifiers()
 test_rest()
 test_chord()

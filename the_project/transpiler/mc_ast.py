@@ -7,6 +7,8 @@ import sys
 
 MC_TO_LILY_MODIFIERS_PRE = databases.mc_to_lily_pre_note_modifiers 
 MC_TO_LILY_MODIFIERS_POST = databases.mc_to_lily_post_note_modifiers
+PRE_MODIFIER_ORDER = databases.pre_modifier_order 
+POST_MODIFIER_ORDER = databases.post_modifier_order 
 INSTR_TO_SHORT_INSTR = databases.instr_to_short_instr
 
 
@@ -276,19 +278,40 @@ class Modifiers(Node):
     def __init__(self, modifiers):
         self.modifiers = modifiers
     
+    def __sort_pre_modifiers(self):
+        # Extract only modifiers that should appear before the event 
+        pre_modifiers = filter(lambda modifier : modifier in MC_TO_LILY_MODIFIERS_PRE, self.modifiers)
+        pre_modifiers = list(pre_modifiers)
+
+        pre_modifiers.sort(key=lambda modifier : PRE_MODIFIER_ORDER[modifier])
+
+        return pre_modifiers 
+    
+    def __sort_post_modifiers(self):
+        post_modifiers = self.modifiers.copy() 
+
+        post_modifiers.sort(key=lambda modifier : POST_MODIFIER_ORDER[modifier])
+
+        return post_modifiers 
+    
     def render_pre_event(self):
         lily_modifier_list = list()
-        for modifier in self.modifiers:
-            if modifier in MC_TO_LILY_MODIFIERS_PRE:
-                lily_modifier_list.append(MC_TO_LILY_MODIFIERS_PRE[modifier])
-            # Omit modifier if not in dictionary 
+
+        sorted_modifiers = self.__sort_pre_modifiers()
+
+        for modifier in sorted_modifiers:
+            lily_modifier_list.append(MC_TO_LILY_MODIFIERS_PRE[modifier])
+         
         if lily_modifier_list == []:
             return ''
         return ' '.join(lily_modifier_list) + ' '
 
     def render_post_event(self):
         lily_modifier_list = list()
-        for modifier in self.modifiers:
+
+        sorted_modifiers = self.__sort_post_modifiers()
+
+        for modifier in sorted_modifiers:
             if modifier in MC_TO_LILY_MODIFIERS_POST:
                 lily_modifier_list.append(MC_TO_LILY_MODIFIERS_POST[modifier])
             else:

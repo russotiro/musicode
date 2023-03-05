@@ -56,7 +56,7 @@ Segno = {
     shortInstrumentName = "Fl. "
 } {
     { \clef treble \defaultTimeSignature
-\time 4/4 \key c \major \tempo "Allegro non troppo" 4 = 120 \stemDown e'4-1 \staccato \stemNeutral e'4\staccato \marcato \key ces \minor r2 e'4\( d'4( \stemUp <c'e'g'>2\staccato \marcato \ff ) \stemNeutral e'4\) g'4 c'4. d'8 e'1 }
+\time 4/4 \key c \major \tempo "Allegro non troppo" 4 = 120 \stemDown e'4\staccato -1 \stemNeutral e'4\staccato \marcato \key ces \minor r2 e'4\( d'4( \stemUp <c'e'g'>2\staccato \marcato ) \ff \stemNeutral e'4\) g'4 c'4. d'8 e'1 }
 <<
 \new Voice { \voiceOne f'4 f'4 f'4. f'8 }
 \new Voice { \voiceTwo c'2\< c'2\! }
