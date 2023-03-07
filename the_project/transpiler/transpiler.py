@@ -8,8 +8,9 @@ pitches and rhythms (no additional markings).
 
 import lark
 import sys 
+import pathlib
 
-from lark import Lark, Transformer
+from lark import Transformer
 
 import math 
 
@@ -44,7 +45,6 @@ def flatten(xs):
 class MyTransformer(Transformer):
     def __init__(self):
         self.metadata = dict()
-        self.part_list = list()
         self.articulation_converter = {
             '.': 'staccato',
             '^': 'marcato',
@@ -80,7 +80,7 @@ class MyTransformer(Transformer):
         return tempo_text, tempo_number
 
     def start(self, args):
-        return mc_ast.Start(self.metadata, self.part_list)
+        return mc_ast.Start(self.metadata, args)
 
     def statement(self, args):
         return args[0]
@@ -99,6 +99,9 @@ class MyTransformer(Transformer):
         composer = self.__concatenate_words(args)
         self.metadata['composer'] = composer
         return ('composer', composer)
+
+    def group(self, args):
+        return ('group', args[0].value)
 
     def tempo(self, args):
         tempo_text, tempo_number = self.__determine_tempo_info(args)
@@ -119,7 +122,6 @@ class MyTransformer(Transformer):
 
     def part(self, args):
         part = mc_ast.Part(args[0], args[1:])
-        self.part_list.append(part)
         return part
 
     def note_event(self, args):
@@ -306,15 +308,18 @@ def main():
         print("Usage: python3 transpiler.py musicodeFile")
         exit(1)
 
-    grammar_file = open("../grammar/grammar.lark", "r")
+    file_dir = pathlib.Path(__file__).parents[1].joinpath('grammar', 'grammar.lark').resolve()
+    grammar_file = open(file_dir, "r")
     parser = lark.Lark(grammar_file.read())
     
     musicode_file = open(sys.argv[1], "r")
     tree = parser.parse(musicode_file.read())
     result = MyTransformer().transform(tree)
 
-    # print(result)
-    print(result.render())
+    lilypond_file = sys.argv[1][:-3] + ".ly"
+    file_object = open(lilypond_file, "w+")
+    file_object.write(result.render())
+    file_object.close()
 
 
 

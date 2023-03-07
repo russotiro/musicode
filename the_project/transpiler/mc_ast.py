@@ -23,9 +23,9 @@ class Node:
 class Start(Node):
     name = 'start'
     
-    def __init__(self, metadata, part_list=list()):
+    def __init__(self, metadata, raw_list=list()):
         self.metadata = metadata
-        self.part_list = part_list 
+        self.raw_list = raw_list
     
     def render_header(self):
         metadata = self.metadata 
@@ -87,10 +87,19 @@ Segno = {
 '''
     
     def render_parts(self):
-        return '<<\n' + '\n'.join([part.render() for part in self.part_list]) + '\n>>'
+        result = '<<\n'
+        for item in self.raw_list:
+            if type(item) == tuple and item[0] == 'group':
+                if item[1] == 'begin':
+                    result += "\\new StaffGroup <<\n"
+                elif item[1] == 'end':
+                    result += ">>\n"
+            elif type(item) == Part:
+                result += item.render() + '\n'
+        return result + '\n>>'
     
     def render(self):
-        result = '\\version "2.23.0"\n'
+        result = '\\version "2.24.1"\n'
         return result + self.render_header() + self.render_library() + self.render_parts() 
 
 class Tempo(Node):

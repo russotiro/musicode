@@ -209,6 +209,7 @@ instr_to_short_instr = {
     "Tambourine" : "Tamb.",
     "Castanets" : "Cast.",
     "Gong" : "Gng.",
+    "Tubular Bells" : "T. b.",
     "Tubular bells" : "T. b.",
     "Chimes" : "T. b.",
     "Glockenspiel" : "Glock.",
@@ -220,6 +221,7 @@ instr_to_short_instr = {
     "Viola" : "Vla.",
     "Violoncello" : "Vc.",
     "Cello" : "Vc.",
+    "Double Bass" : "D. B.",
     "Double bass" : "D. B.",
     "Guitar" : "Gui."
 }
@@ -232,5 +234,9 @@ grand_staffs = [
     "Harpsichord",
     "Accordion",
     "Celesta",
-    "Organ"
+    "Organ",
+    "Church Organ",
+    "Pipe Organ",
+    "Jazz Organ",
+    "Rock Organ"
 ]
