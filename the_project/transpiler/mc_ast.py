@@ -275,7 +275,7 @@ class Chord(Node):
     def render(self):
         lily = "<"
         for note in self.notes:
-            lily += note.render_pitch_octave()
+            lily += note.render_pitch_octave() + ' '
         lily += ">"
         lily += self.duration 
         return self.modifiers.render_pre_event() + lily + self.modifiers.render_post_event()

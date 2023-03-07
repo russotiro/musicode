@@ -57,12 +57,10 @@ Segno = {
 } {
     \key a \major
 \clef treble
-{ e'4. fis'8 e'4 cis'2. e'4. fis'8 e'4 }
-\volta 1 {  { cis'2. } }
-
-\volta 2 {  { fis'2. } }
-
-{ b'2 b'4 gis'2. a'2 a'4 e'2. }
+{ r2. r2. e'4. \tuplet 3/2 { \stemDown fis'16\stemNeutral \stemDown fis'16\stemNeutral \stemDown fis'16\stemNeutral } e'4 }
+{ \slashedGrace { d'8 } cis'2. }
+{ b'2 b'4\staccato gis'2.\trill a'2 a'4 e'2. }
+\bar "|."
 }
 \new StaffGroup <<
 \new Staff \with {
@@ -74,13 +72,8 @@ Segno = {
 \tempo 4 = 90
 \key a \major
 \clef alto
-{ e'4. fis'8 e'4 cis'2. e'4. fis'8 e'4 }
-\volta 1 {  { cis'2. } }
-
-\bar ":|."
-\volta 2 {  { dis'2. } }
-
-{ b'2 b'4 gis'2. a'2 a'4 e'2. }
+{ <cis' e' >4. fis'8 e'4 <e cis' >2. r2. r2. }
+{ b'2 b'4\staccato gis'2. a'2 a'4 e'2. }
 }
 \new StaffGroup \with {
     instrumentName = "Violoncello "
@@ -90,22 +83,13 @@ Segno = {
     \new Staff {
         \key a \major
 \clef bass
-{ cis'4. d'8 cis'4 a2. cis'4. d'8 cis'4 }
-\volta 1 {  { a2. } }
-
-\volta 2 {  { b2. } }
-
-{ gis'2 gis'4 e'2. e'2 e'4 cis'2. }
+{ cis'4. d'8 cis'4 a2. cis'4. d'8 cis'4 a2. }
+{ gis'2 gis'4\staccato e'2. e'2 e'4 cis'2. }
 }
     \new Staff {
         \key a \major
 \clef bass
-{ a,2. a,2. a,2. }
-\volta 1 {  { a,2. } }
-
-\volta 2 {  { a,2. } }
-
-{ e2. e2. a,2. cis2. }
+{ a,2. a,2. a,2. a,2. e2. e2. a,2. cis2. }
 }
 >> }
 
