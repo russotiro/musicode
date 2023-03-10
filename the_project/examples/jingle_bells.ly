@@ -67,12 +67,12 @@ Segno = {
 >> \oneVoice
 
 { des''8_[ c''8 bes'8] aes'8\accent }
-{ f'4\p \< aes'4 des'4. ees'8 f'1\mf \bar "|." }
+{ f'4\p \< aes'4 des'4. ees'8 f'1\mf  \repeat unfold 80 { c4 c c c } \bar "|." }
 }
     \new Staff {
         \clef bass
 \key des \major
-{ des2.\f aes,4\marcato des,1 des2\p \< ges,4 aes,4 des1\mf }
+{ des2.\f aes,4\marcato des,1 des2\p \< ges,4 aes,4 des1\mf \repeat unfold 80 { c4 c c c } }
 }
 >>
 
@@ -82,7 +82,7 @@ Segno = {
 } {
     \clef treble
 \key des \major
-{ des''2\f des''4\staccato aes'4\staccato des''2 des''4\staccato aes'4\staccato bes'4\p \< ges'4 c''4 aes'4 aes'1:32 \mf }
+{ des''2\f des''4\staccato aes'4\staccato des''2 des''4\staccato aes'4\staccato bes'4\p \< ges'4 c''4 aes'4 aes'1:32 \mf \repeat unfold 80 { c4 c c c }}
 }
 
 >>

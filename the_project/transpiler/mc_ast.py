@@ -89,13 +89,15 @@ GotoCoda = {
 
 Coda = {
   \\once \\override Score.RehearsalMark #'break-visibility = #'#(#f #t #t)
-  \\mark \\markup { \\small \\musicglyph #"scripts.coda" }
+  \\mark \\markup { \\musicglyph #"scripts.coda" }
 }
 
 Segno = {
   \\once \\override Score.RehearsalMark #'break-visibility = #'#(#f #t #t)
   \\mark \\markup { \\small \\musicglyph #"scripts.segno" }
 }
+
+\paper { left-margin = 0.75\in }
 
 '''
     
@@ -420,6 +422,21 @@ class Text(Node):
             sys.stderr.write('Tried to render Text of invalid type.\n')
 
 
+class Break(Node):
+    name = 'break'
+
+    def __init__(self, type):
+        self.type = type
+
+    def render(self):
+        if self.type == 'line':
+            return '\\break'
+        elif self.type == 'page':
+            return '\\pageBreak'
+        else:
+            sys.stderr.write('Invalid break type.\n')
+
+
 class Tuplet(Node):
     name = 'tuplet'
 
@@ -672,7 +689,17 @@ class Coda(Node):
         return []
 
     def render(self):
-        result = "\\Coda"
+        result = '''\\cadenzaOn \\stopStaff
+                    \\repeat unfold 1 {
+                        s1
+                        \\bar ""
+                    }
+                    \\startStaff \\cadenzaOff
+                    \\break
+                    \\once \\override Staff.KeySignature.break-visibility = #end-of-line-invisible
+                    \\once \\override Staff.Clef.break-visibility = #end-of-line-invisible
+                 '''
+        result += "\\Coda"
         for env in self.staff_environments:
             result += " " + env.render()
         return result

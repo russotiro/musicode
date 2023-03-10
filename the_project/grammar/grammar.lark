@@ -30,10 +30,10 @@ note_environment: _LPAREN (tuplet | grace | tremolo) _RPAREN
 tuplet: "tuplet" /[1-9][0-9]*\/[1-9][0-9]*/ notes_argument+
 grace: "grace" grace_type? _LPAREN notes _RPAREN (note_event | note_environment)
 grace_type: /slash|noSlash/
-tremolo: "tremolo" /[1-3]/ note_event~2 // transpiler note: enforce that notes have same duration
+tremolo: "tremolo" /[1-3]/ note_event~2
 
 // staff events
-staff_event: clef | key | time | tempo | barline | symbol | text
+staff_event: clef | key | time | tempo | barline | symbol | text | line_page_break
 clef: "clef" WORD
 key: "key" /[A-G][#b]?[Mm]?/
 time: "time" ((/[1-9][0-9]*/ "/" duration) | /common/ | /cut/)
@@ -43,8 +43,8 @@ tempo_text: /\"/ WORD+ /\"/
 tempo_number: "/" duration "=" /[1-9][0-9]*/
 
 barline: "barline" WORD
-// transpiler note: if we detect a final barline in the middle of the piece, we must put "Fine" in bold above it
 symbol: "symbol" WORD
+line_page_break: "break" WORD
 
 text: road_map_text | expression_text | technique_text
 road_map_text: /(D\.C\.|D\.S\.) al ([fF]ine|[cC]oda)/ | /toCoda/

@@ -235,6 +235,9 @@ class MyTransformer(Transformer):
         else:
             sys.stderr.write("You tried to set an invalid symbol type: " + args[0].value + "\n")
 
+    def line_page_break(self, args):
+        return mc_ast.Break(args[0].value)
+
     def road_map_text(self, args):
         return mc_ast.Text('road_map', args[0].value.lower())
 
