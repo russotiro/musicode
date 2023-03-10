@@ -15,6 +15,9 @@ INSTR_TO_SHORT_INSTR = databases.instr_to_short_instr
 class Node:
     name = 'node'
 
+    def validate(self):
+        return []
+
     def __repr__(self):
         return ("@%s%r" % (self.name, self.__dict__))
     
@@ -26,6 +29,16 @@ class Start(Node):
     def __init__(self, metadata, raw_list=list()):
         self.metadata = metadata
         self.raw_list = raw_list
+
+    def validate(self):
+        errors = []
+
+        for item in self.raw_list:
+            if type(item) == Part:
+                errors += item.validate()
+                
+        return errors
+
     
     def render_header(self):
         metadata = self.metadata 
@@ -109,6 +122,9 @@ class Tempo(Node):
         self.tempo_text = tempo_text
         self.tempo_number = tempo_number
 
+    def validate(self):
+        return []
+
     def extract_tempo_number(self):
         if self.tempo_number == []:
             return ""
@@ -136,6 +152,9 @@ class Barline(Node):
     def __init__(self, type):
         self.type = type
 
+    def validate(self):
+        return []
+
     def render(self):
         line = {
             'single': '|',
@@ -155,6 +174,9 @@ class Clef(Node):
     def __init__(self, value=""):
         self.value = value
 
+    def validate(self):
+        return []
+
     def render(self):
         return "\\clef " + self.value
 
@@ -168,6 +190,9 @@ class Key(Node):
             self.mode = "minor"
         self.pitch = Pitch(value.replace('m','').replace('M',''))
 
+    def validate(self):
+        return []
+
     def render(self):
         return "\\key " + self.pitch.render() + " \\" + self.mode
 
@@ -177,6 +202,9 @@ class Time(Node):
 
     def __init__(self, time=None):
         self.time = time
+
+    def validate(self):
+        return []
 
     def render(self):
         if self.time == 'common':
@@ -352,6 +380,9 @@ class Symbol(Node):
     def __init__(self, s_type):
         self.type = s_type 
     
+    def validate(self):
+        return []
+
     def render(self):
         if self.type == 'segno':
             return '\\Segno'
@@ -364,6 +395,9 @@ class Text(Node):
     def __init__(self, t_type, contents):
         self.type = t_type 
         self.contents = contents 
+
+    def validate(self):
+        return []
     
     def __set_road_map_converter(self):
         self.road_map_converter = {
@@ -406,6 +440,12 @@ class Grace(Node):
         self.notes = notes
         self.final_note = final_note
 
+    def validate(self):
+        errors = []
+        errors += self.notes.validate()
+        errors += self.final_note.validate()
+        return errors
+
     def render(self):
         result = ""
         if self.grace_type == "slash":
@@ -426,9 +466,16 @@ class Tremolo(Node):
         self.num_bars = int(num_bars)
         self.note1 = note1
         self.note2 = note2
-        
-        if note1.duration != note2.duration:
-            sys.stderr.write("Invalid tremolo: differing note durations\n")
+
+    def validate(self):
+        errors = []
+        if self.note1.duration != self.note2.duration:
+            e = "Invalid tremolo: differing note durations in %r and %r"
+            # TODO: it would be nice to pretty-print these notes in
+            # musicode syntax
+            e %= self.note1, self.note2
+            errors.append(e)
+        return errors
 
     def render(self):
         # Get the Lilypond duration of each note in tremolo (2^(2+num_bars))
@@ -470,6 +517,12 @@ class Notes(Node):
     def __init__(self, notes_args):
         self.notes_args = notes_args
     
+    def validate(self):
+        errors = []
+        for arg in self.notes_args:
+            errors += arg.validate()
+        return errors
+
     def render_notes(self):
         return ' '.join([arg.render() for arg in self.notes_args])
     
@@ -495,6 +548,9 @@ class Voices(Node):
     def __init__(self, voices):
         self.voices = voices 
     
+    def validate(self):
+        return []
+
     def render(self):
         if len(self.voices) > 4:
             sys.stderr.write(f'ERROR: Cannot transpile. There are {len(self.voices)} voices in a '
@@ -513,6 +569,12 @@ class Ending(Node):
         self.numbers = numbers
         self.content = content
 
+    def validate(self):
+        if len(set(self.numbers)) != len(self.numbers):
+            return ["Invalid ending: repeated numbers in %r" % self.numbers]
+        else:
+            return []
+
     def render(self):
         result = "\\volta " + ','.join([str(n) for n in self.numbers]) + " { "
         for env in self.content:
@@ -526,6 +588,12 @@ class Part(Node):
     def __init__(self, instr_name, staffs):
         self.instrument_name = instr_name
         self.staffs = staffs
+
+    def validate(self):
+        errors = []
+        for staff in self.staffs:
+            errors += staff.validate()
+        return errors
 
     def short_instr(self):
         if self.instrument_name in INSTR_TO_SHORT_INSTR:
@@ -584,14 +652,24 @@ class Staff(Node):
     def __init__(self, staff_environments):
         self.staff_environments = staff_environments
 
+    def validate(self):
+        errors = []
+        for env in self.staff_environments:
+            errors += env.validate()
+        return errors
+
     def render(self):
         return '\n'.join(staff_env.render() for staff_env in self.staff_environments)
 
+    
 class Coda(Node):
     name = 'coda'
 
     def __init__(self, envs):
         self.staff_environments = envs
+
+    def validate(self):
+        return []
 
     def render(self):
         result = "\\Coda"

@@ -316,6 +316,10 @@ def main():
     tree = parser.parse(musicode_file.read())
     result = MyTransformer().transform(tree)
 
+    errors = result.validate()
+    for e in errors:
+        print('***', e)
+
     lilypond_file = sys.argv[1][:-3] + ".ly"
     file_object = open(lilypond_file, "w+")
     file_object.write(result.render())
