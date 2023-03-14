@@ -594,10 +594,12 @@ class Ending(Node):
             return []
 
     def render(self):
-        result = "\\volta " + ','.join([str(n) for n in self.numbers]) + " { "
+        result = "\\set Score.repeatCommands = #'((volta \""
+        result += ', '.join([str(n) for n in self.numbers]) + "\"))\n"
         for env in self.content:
             result += " " + env.render()
-        return result + " }\n"
+        result += "\n\\set Score.repeatCommands = #'((volta #f))\n"
+        return result
 
 
 class Part(Node):
