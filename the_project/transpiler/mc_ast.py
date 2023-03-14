@@ -272,7 +272,8 @@ class Pitch(Node):
 class Rest(Node):
     name = 'rest'
 
-    def __init__(self, beaming=None, duration=None):
+    def __init__(self, rest_type=None, beaming=None, duration=None):
+        self.rest_type = rest_type
         self.beaming = beaming 
         self.duration = duration 
 
@@ -283,7 +284,7 @@ class Rest(Node):
         self.duration = duration
     
     def render(self):
-        lily = "r" + self.duration 
+        lily = self.rest_type + self.duration 
         modifiers = Modifiers(self.beaming)
         return modifiers.render_pre_event() + lily + modifiers.render_post_event()
 

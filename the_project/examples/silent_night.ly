@@ -59,7 +59,7 @@ Segno = {
 } {
     \key a \major
 \clef treble
-{ r2. r2. e'4. \tuplet 3/2 { cis''16 cis''16 cis''16 } e'4 }
+{ R2. R2. e'4. \tuplet 3/2 { cis''16[ cis''16 r16] } e'4 }
 \volta 1 {  { \slashedGrace { d'8( } cis'2.) } }
 
 \bar ":|."
@@ -92,7 +92,7 @@ Segno = {
 \tempo 4 = 90
 \key a \major
 \clef alto
-{ <cis' e' >4. fis'8 e'4 <e cis' >2. r2. r2. r2. }
+{ <cis' e' >4. fis'8 e'4 <e cis' >2. R2. R2. R2. }
 { b'2 b'4\staccato gis'2. a'2 a'4 e'2. }
 \cadenzaOn \stopStaff
                     \repeat unfold 1 {

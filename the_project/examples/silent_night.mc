@@ -4,7 +4,7 @@
 
 (part "Trumpet"
     (staff (key A) (clef treble)
-        (notes r/2. r/2. E4/4. (tuplet 3/2 C#5/16 C#5/16 C#5/16) E4/4)
+        (notes R/2. R/2. E4/4. (tuplet 3/2 C#5[beamBegin]/16 C#5/16 r[beamEnd]/16) E4/4)
         (ending 1 (notes (grace (notes D4[slurBegin]/8) C#4[slurEnd]/2.)))
         (barline repeatEnd)
         (ending 2 (notes C#4/2.))
@@ -19,7 +19,7 @@
 (group begin)
 (part "Viola"
     (staff (time 3/4) (tempo /4 = 90) (key A) (clef alto)
-        (notes C#4_E4/4. F#4/8 E4/4 E3_C#4/2. r/2. r/2. r/2.)
+        (notes C#4_E4/4. F#4/8 E4/4 E3_C#4/2. R/2. R/2. R/2.)
         (notes B4/2 B4./4 G#4/2. A4/2 A4/4 E4/2.)
         (coda (notes F#4/2. F#4/2.))))
 

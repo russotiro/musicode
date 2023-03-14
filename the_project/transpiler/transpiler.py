@@ -162,9 +162,9 @@ class MyTransformer(Transformer):
         return args[0].value
     
     def rest(self, args):
-        rest = mc_ast.Rest()
-        if args: # Check if beaming list is nonempty
-            rest.set_beaming([arg.value for arg in args])
+        rest = mc_ast.Rest(rest_type=args[0])
+        if len(args) > 1:
+            rest.set_beaming(args[1:])
         else:
             rest.set_beaming([])
         
