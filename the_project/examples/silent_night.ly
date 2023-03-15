@@ -7,26 +7,25 @@
 
 DSfine = {
   \once \override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \once \override Score.RehearsalMark.self-alignment-X = #RIGHT
   \mark \markup { \small "D.S. al fine" }
-}
-
-DS = {
-  \once \override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
-  \mark \markup { \small "D.S." }
 }
 
 DCfine = {
   \once \override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \once \override Score.RehearsalMark.self-alignment-X = #RIGHT
   \mark \markup { \small "D.C. al fine" }
 }
 
 DCcoda = {
   \once \override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \once \override Score.RehearsalMark.self-alignment-X = #RIGHT
   \mark \markup { \small "D.C. al coda" }
 }
 
 DScoda = {
   \once \override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \once \override Score.RehearsalMark.self-alignment-X = #RIGHT
   \mark \markup { \small "D.S. al coda" }
 }
 
@@ -37,12 +36,13 @@ Fine = {
 
 GotoCoda = {
   \once \override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
-  \mark \markup { \small "to Coda" \small \musicglyph #"scripts.coda" }
+  \once \override Score.RehearsalMark.self-alignment-X = #RIGHT
+  \mark \markup { \small "To Coda" \raise #0.5 \smaller \musicglyph #"scripts.coda" }
 }
 
 Coda = {
   \once \override Score.RehearsalMark #'break-visibility = #'#(#f #t #t)
-  \mark \markup { \musicglyph #"scripts.coda" }
+  \mark \markup { " " \musicglyph #"scripts.coda" \lower #0.9 "Coda" }
 }
 
 Segno = {
@@ -59,7 +59,7 @@ Segno = {
 } {
     \key a \major
 \clef treble
-{ R2. R2. e'4. \tuplet 3/2 { cis''16[ cis''16 r16] } e'4 }
+{ r2. R2. e'4. \tuplet 3/2 { cis''16[ cis''16 r16] } e'4 }
 \set Score.repeatCommands = #'((volta "1, 2, 3"))
  { \slashedGrace { d'8( } cis'2.) }
 \set Score.repeatCommands = #'((volta #f))
@@ -71,7 +71,7 @@ Segno = {
 
 \break
 \Segno
-{ b'2 b'4\staccato gis'2.\trill a'2 a'4 e'2.~ e'2. }
+{ b'2 b'4\staccato gis'2.\trill a'2 a'4 \GotoCoda e'2.~ e'2. }
 \DScoda
 \bar "||"
 \cadenzaOn \stopStaff

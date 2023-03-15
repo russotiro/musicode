@@ -54,26 +54,25 @@ class Start(Node):
         return '''
 DSfine = {
   \\once \\override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \\once \\override Score.RehearsalMark.self-alignment-X = #RIGHT
   \\mark \\markup { \\small "D.S. al fine" }
-}
-
-DS = {
-  \\once \\override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
-  \\mark \\markup { \\small "D.S." }
 }
 
 DCfine = {
   \\once \\override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \\once \\override Score.RehearsalMark.self-alignment-X = #RIGHT
   \\mark \\markup { \\small "D.C. al fine" }
 }
 
 DCcoda = {
   \\once \\override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \\once \\override Score.RehearsalMark.self-alignment-X = #RIGHT
   \\mark \\markup { \\small "D.C. al coda" }
 }
 
 DScoda = {
   \\once \\override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
+  \\once \\override Score.RehearsalMark.self-alignment-X = #RIGHT
   \\mark \\markup { \\small "D.S. al coda" }
 }
 
@@ -84,12 +83,13 @@ Fine = {
 
 GotoCoda = {
   \\once \\override Score.RehearsalMark #'break-visibility = #'#(#t #t #f)
-  \\mark \\markup { \\small "to Coda" \\small \\musicglyph #"scripts.coda" }
+  \\once \\override Score.RehearsalMark.self-alignment-X = #RIGHT
+  \\mark \\markup { \\small "To Coda" \\raise #0.5 \\smaller \\musicglyph #"scripts.coda" }
 }
 
 Coda = {
   \\once \\override Score.RehearsalMark #'break-visibility = #'#(#f #t #t)
-  \\mark \\markup { \\musicglyph #"scripts.coda" }
+  \\mark \\markup { " " \\musicglyph #"scripts.coda" \\lower #0.9 "Coda" }
 }
 
 Segno = {
@@ -418,7 +418,8 @@ class Text(Node):
         elif self.type == 'expression':
             return f'\\tweak direction #DOWN \\mark \\markup {{ \\small \\italic "{self.contents}" }}'
         elif self.type == 'technique':
-            return f'\\mark \\markup \\small "{self.contents}"'
+            result = '\\once \\override Score.RehearsalMark.self-alignment-X = #LEFT\n'
+            return result + f'\\mark \\markup \\small "{self.contents}"'
         else:
             sys.stderr.write('Tried to render Text of invalid type.\n')
 
