@@ -10,6 +10,7 @@ MC_TO_LILY_MODIFIERS_POST = databases.mc_to_lily_post_note_modifiers
 PRE_MODIFIER_ORDER = databases.pre_modifier_order 
 POST_MODIFIER_ORDER = databases.post_modifier_order 
 INSTR_TO_SHORT_INSTR = databases.instr_to_short_instr
+MIDI_NAMES = databases.normal_to_midi
 
 
 class Node:
@@ -111,11 +112,18 @@ Segno = {
                     result += ">>\n"
             elif type(item) == Part:
                 result += item.render() + '\n'
-        return result + '\n>>'
+        return result + '\n>>\n'
     
-    def render(self):
-        result = '\\version "2.24.1"\n'
-        return result + self.render_header() + self.render_library() + self.render_parts() 
+    def render(self, midi: bool = False):
+        result = '\\version "2.24.1"\n' + self.render_header() + self.render_library()
+
+        if midi:
+            result += "\\score {\n"
+        result += self.render_parts()
+
+        if midi:
+            result += "\\midi { }\n}\n"
+        return result
 
 class Tempo(Node):
     name = 'tempo'
@@ -631,8 +639,13 @@ class Part(Node):
             return self.instrument_name[0:3] + '.'
 
     def render_instr_names(self):
+        midi_name = self.instrument_name.lower()
+        if midi_name in MIDI_NAMES:
+            midi_name = MIDI_NAMES[midi_name]
+
         result  = '    instrumentName = "' + self.instrument_name + ' "\n'
         result += '    shortInstrumentName = "' + self.short_instr() + ' "\n'
+        result += '    midiInstrument = "' + midi_name + '"\n'
         return result
 
     def render_staffs(self):

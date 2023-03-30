@@ -307,9 +307,18 @@ class MyTransformer(Transformer):
 
 
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python3 transpiler.py musicodeFile")
+    usage = "Usage: python3 transpiler.py musicodeFile [--midi]\n"
+
+    if len(sys.argv) < 2 or len(sys.argv) > 3:
+        sys.stderr.write(usage)
         exit(1)
+
+    midi = False
+    if len(sys.argv) == 3:
+        if sys.argv[2] == "--midi":
+            midi = True
+        else:
+            sys.stderr.write("Invalid parameter " + sys.argv[2] + "\n" + usage)
 
     file_dir = pathlib.Path(__file__).parents[1].joinpath('grammar', 'grammar.lark').resolve()
     grammar_file = open(file_dir, "r")
@@ -325,7 +334,7 @@ def main():
 
     lilypond_file = sys.argv[1][:-3] + ".ly"
     file_object = open(lilypond_file, "w+")
-    file_object.write(result.render())
+    file_object.write(result.render(midi))
     file_object.close()
 
 

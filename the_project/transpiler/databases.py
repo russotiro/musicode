@@ -240,3 +240,18 @@ grand_staffs = [
     "Jazz Organ",
     "Rock Organ"
 ]
+
+normal_to_midi = {
+    "electric piano" : "electric piano 1",
+    "bass clarinet" : "clarinet",
+    "double bassoon" : "bassoon",
+    "contrabassoon" : "bassoon",
+    "horn" : "french horn",
+    "cornet" : "trumpet",
+    "chimes" : "tubular bells",
+    "piano" : "acoustic grand",
+    "harp" : "orchestral harp",
+    "violoncello" : "cello",
+    "guitar" : "acoustic guitar (steel)",
+    "double bass" : "acoustic bass"
+}
