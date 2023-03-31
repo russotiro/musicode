@@ -1,0 +1,26 @@
+.navBar {
+  background-color: #303F9F;
+  color: #EFF1FF;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-size: 1.1em;
+  grid-area: nav;
+  display: flex-block;
+  align-self: stretch;
+}
+
+.navactive, .nav {
+  text-decoration: none;
+  color: #EFF1FF;
+  display: block;
+  padding: 1em 1em 1em 1.55em;
+}
+
+.navactive {
+  background-color: #5C6DC9;
+}
+
+ul {
+  list-style-type: none;
+}
+
+/*# sourceMappingURL=navBar.module.css.map */

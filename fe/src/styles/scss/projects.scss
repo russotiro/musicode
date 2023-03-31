@@ -1,0 +1,52 @@
+@use 'base' as b;
+
+
+.projs {
+    @include b.light-basics;
+    grid-area: content;
+}
+
+.project {
+    border-width: 0 .2em .6em .5em;
+    border-style: solid;
+    border-color: #FFFFFF;
+    padding: .7em .7em .7em 1em;
+    height: 1.5em;
+    width: auto;
+}
+
+%projecttext {
+    display: inline-block;
+    width: 34%;
+}
+
+.projecttitle {
+    @extend %projecttext;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+.projectdate{
+    @extend %projecttext;
+    grid-column-start: 3;
+    grid-column-end: 4;
+}
+
+.actions{
+    @extend %projecttext;
+    grid-column-start: 4;
+    justify-content: right;
+    display: inline-block;
+    padding: 0 2em 0 2em;
+    position: absolute;
+}
+
+.header {
+    display: inline-block;
+    //width: auto;
+    font-size: b.$header-fontsize;
+    grid-area: header;
+    padding-left: 1.2em;
+}
+
+

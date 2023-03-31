@@ -1,0 +1,16 @@
+.home {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: [left] 12em [vert-div] repeat(3, minmax(200px, 1fr));
+  grid-template-rows: [top] 4em [horz-div] 3em [p] 1fr;
+  grid-template-areas: "logo . . ." ". header header header" "nav content content content";
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  align-items: start;
+  justify-items: stretch;
+  justify-content: stretch;
+  overflow-x: hidden;
+}
+
+/*# sourceMappingURL=home.module.css.map */

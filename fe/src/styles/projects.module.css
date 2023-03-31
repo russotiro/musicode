@@ -1,0 +1,48 @@
+.projs {
+  background-color: #F4F6FF;
+  color: #000000;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-size: 1.1em;
+  grid-area: content;
+}
+
+.project {
+  border-width: 0 0.2em 0.6em 0.5em;
+  border-style: solid;
+  border-color: #FFFFFF;
+  padding: 0.7em 0.7em 0.7em 1em;
+  height: 1.5em;
+  width: auto;
+}
+
+.actions, .projectdate, .projecttitle {
+  display: inline-block;
+  width: 34%;
+}
+
+.projecttitle {
+  grid-row-start: 2;
+  grid-row-end: 3;
+}
+
+.projectdate {
+  grid-column-start: 3;
+  grid-column-end: 4;
+}
+
+.actions {
+  grid-column-start: 4;
+  justify-content: right;
+  display: inline-block;
+  padding: 0 2em 0 2em;
+  position: absolute;
+}
+
+.header {
+  display: inline-block;
+  font-size: 1.2em;
+  grid-area: header;
+  padding-left: 1.2em;
+}
+
+/*# sourceMappingURL=projects.module.css.map */

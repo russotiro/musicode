@@ -1,0 +1,31 @@
+@use 'base' as b;
+
+
+.navBar {
+    @include b.dark-basics;
+    grid-area: nav;
+    display: flex-block;
+    align-self: stretch;
+}
+
+%NavLink {
+    text-decoration: none;
+    color: b.$light-textcolor;
+    /// god damnit. display is the elements around not the children
+    display: block;
+    padding: 1em 1em 1em 1.55em;
+}
+
+.nav {
+    @extend %NavLink;
+}
+
+
+.navactive {
+    @extend %NavLink;
+    background-color: b.$highlight-color;
+}
+
+ul {
+    list-style-type: none;
+}
