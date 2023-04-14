@@ -1,0 +1,16 @@
+(part "Flute"
+  (staff
+    (notes C4/1)
+    (barline single)
+    (notes C4/1)
+    (barline double)
+    (notes C4/1)
+    (barline dotted)
+    (notes C4/1)
+    (barline repeatBegin)
+    (notes C4/1)
+    (barline repeatEnd)
+    (notes C4/1)
+    (barline final)
+  )
+)
