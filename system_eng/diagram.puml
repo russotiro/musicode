@@ -2,28 +2,27 @@
 
 package "MusiCode Editor" {
     component [IDE]
-    component [Compiler Client]
+    component [App Backend]
 }
 interface "End User"
 node "Transpiler" {
     component [MusiCode Lexer/Parser]
-    component [Tree Conversion]
+    component [Tree Transformer]
     component [LilyPond Printer]
 }
 component [LilyPond Tools]
 
-[End User] --> [IDE] : MusiCode
-[IDE] ..> [End User] : Syntax Highlight
-[IDE] -> [Compiler Client] : MusiCode
-[End User] --> [Compiler Client] : Compile Request
-[Compiler Client] --> [End User] : Generated Score
+[End User] -u-> [IDE] : MusiCode
+[IDE] -> [App Backend] : MusiCode
+[End User] --> [App Backend] : Compile Request
+[App Backend] --> [End User] : Generated Score & MIDI 
 
-[Compiler Client] --> [MusiCode Lexer/Parser] : MusiCode
-[MusiCode Lexer/Parser] ..> [Compiler Client] : Error Messages
-[MusiCode Lexer/Parser] --> [Tree Conversion] : MusiCode AST 
-[Tree Conversion] --> [LilyPond Printer] : LilyPond AST
+[App Backend] --> [MusiCode Lexer/Parser] : MusiCode
+[MusiCode Lexer/Parser] ..> [IDE] : Error Messages
+[MusiCode Lexer/Parser] --> [Tree Transformer] : MusiCode AST 
+[Tree Transformer] --> [LilyPond Printer] : Intermediate Representation
 [LilyPond Printer] --> [LilyPond Tools] : LilyPond 
 
-[LilyPond Tools] --> [Compiler Client] : Score PDF
+[LilyPond Tools] --> [App Backend] : Score PDF, MIDI Audio 
 
 @enduml
